@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Celestial Birthday Surprise ✨</title>
+    
+    <!-- Google Fonts: Playfair Display, Plus Jakarta Sans, and Dancing Script -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           CUSTOM CELESTIAL THEME VARIABLES & ANIMATIONS
+           ========================================================================== */
+        :root {
+            --bg-deep: #050816;
+            --bg-nebula-1: #1e1b4b;
+            --bg-nebula-2: #3b0764;
+            --accent-primary: #f43f5e;
+            --accent-gold: #fbbf24;
+            --glass-bg: rgba(15, 23, 42, 0.58);
+            --glass-border: rgba(255, 255, 255, 0.16);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 20% 20%, var(--bg-nebula-1), transparent 50%),
+                        radial-gradient(circle at 80% 80%, var(--bg-nebula-2), transparent 50%),
+                        var(--bg-deep);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+            user-select: none;
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-script {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Full-Screen Starfield & Interactive Fireworks Canvas */
+        #cosmos-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: auto;
+        }
+
+        /* ==========================================================================
+           STAGE 1: 3D WAX-SEALED CELESTIAL ENVELOPE
+           ========================================================================== */
+        .stage-transition {
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        visibility 0.8s;
+        }
+
+        .stage-hidden {
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+            visibility: hidden;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .envelope-wrapper {
+            perspective: 1200px;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            background: linear-gradient(145deg, #1e1b4b, #0f172a);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            border-radius: 18px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(251, 191, 36, 0.15);
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .envelope:hover {
+            transform: translateY(-6px) rotateX(4deg);
+        }
+
+        /* Envelope Inner Glow Card Peek */
+        .envelope-letter-peek {
+            position: absolute;
+            inset: 14px;
+            background: linear-gradient(180deg, #fffbeb, #fef3c7);
+            border-radius: 12px;
+            color: #1e1b4b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s;
+            z-index: 1;
+        }
+
+        .envelope.opened .envelope-letter-peek {
+            transform: translateY(-95px);
+        }
+
+        /* Envelope Bottom & Side Flaps */
+        .envelope-pocket {
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            overflow: hidden;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .envelope-pocket::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65%;
+            background: linear-gradient(180deg, #1e293b, #0f172a);
+            clip-path: polygon(0 100%, 50% 25%, 100% 100%);
+            border-top: 1px solid rgba(251, 191, 36, 0.25);
+        }
+
+        .envelope-pocket::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(30, 41, 59, 0.95) 0%, transparent 45%, transparent 55%, rgba(30, 41, 59, 0.95) 100%);
+            clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+        }
+
+        /* Top Triangular Flap */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 58%;
+            background: linear-gradient(180deg, #312e81, #1e1b4b);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top center;
+            transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.35s;
+            z-index: 4;
+            border-top: 1px solid rgba(251, 191, 36, 0.5);
+        }
+
+        .envelope.opened .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        /* Gold Wax Seal Button */
+        .wax-seal {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fde68a, #f59e0b 60%, #b45309);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6),
+                        inset 0 2px 4px rgba(255, 255, 255, 0.7),
+                        0 0 0 5px rgba(245, 158, 11, 0.25);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+            animation: sealPulse 2.5s infinite ease-in-out;
+        }
+
+        .wax-seal:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 12px 28px rgba(245, 158, 11, 0.5),
+                        inset 0 2px 6px rgba(255, 255, 255, 0.9);
+        }
+
+        .envelope.opened .wax-seal {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.4);
+            pointer-events: none;
+        }
+
+        @keyframes sealPulse {
+            0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 0 4px rgba(251, 191, 36, 0.2); }
+            50% { box-shadow: 0 8px 25px rgba(251, 191, 36, 0.45), 0 0 0 10px rgba(251, 191, 36, 0.05); }
+        }
+
+        /* ==========================================================================
+           STAGE 2: INTERACTIVE CAKE, CANDLES & MIC BLOW METER
+           ========================================================================== */
+        .cake-container {
+            position: relative;
+            width: 230px;
+            height: 185px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cake-container:hover {
+            transform: scale(1.03);
+        }
+
+        .plate {
+            width: 230px;
+            height: 12px;
+            background: linear-gradient(90deg, #94a3b8, #f8fafc, #94a3b8);
+            border-radius: 999px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
+        }
+
+        .tier-bottom {
+            width: 188px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-primary), #9f1239);
+            border-radius: 14px 14px 4px 4px;
+            position: relative;
+            box-shadow: inset 0 -6px 14px rgba(0, 0, 0, 0.3);
+        }
+
+        .tier-top {
+            width: 136px;
+            height: 48px;
+            background: linear-gradient(135deg, #fb7185, var(--accent-primary));
+            border-radius: 14px 14px 2px 2px;
+            position: relative;
+            box-shadow: inset 0 -4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .frosting {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 14px;
+            background: #fff1f2;
+            border-radius: 14px 14px 6px 6px;
+        }
+
+        .frosting::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 14px;
+            width: 14px;
+            height: 12px;
+            background: #fff1f2;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 28px 3px 0 #fff1f2, 58px -1px 0 #fff1f2, 88px 4px 0 #fff1f2, 116px 0px 0 #fff1f2;
+        }
+
+        .tier-top .frosting::after {
+            box-shadow: 24px 2px 0 #fff1f2, 52px -2px 0 #fff1f2, 80px 3px 0 #fff1f2;
+        }
+
+        .candles-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: -2px;
+            z-index: 2;
+        }
+
+        .candle {
+            width: 11px;
+            height: 38px;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffffff,
+                #ffffff 5px,
+                var(--accent-gold) 5px,
+                var(--accent-gold) 10px
+            );
+            border-radius: 4px 4px 1px 1px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .candle::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 6px;
+            background: #334155;
+        }
+
+        .flame {
+            position: absolute;
+            top: -23px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 21px;
+            background: radial-gradient(ellipse at bottom, #ffffff 10%, #fde047 50%, #f97316 90%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 16px #fbbf24, 0 0 32px #f97316, 0 0 46px rgba(251, 191, 36, 0.7);
+            animation: flicker 0.85s infinite alternate ease-in-out;
+            transform-origin: bottom center;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .candle:nth-child(2) .flame { animation-delay: 0.2s; }
+        .candle:nth-child(3) .flame { animation-delay: 0.45s; }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+            50% { transform: translateX(-50%) scale(1.1, 0.92) rotate(3deg); }
+            100% { transform: translateX(-50%) scale(0.95, 1.07) rotate(-1deg); }
+        }
+
+        .flame.wind-tilt {
+            transform: translateX(-20%) scale(0.85, 1.15) rotate(24deg) !important;
+        }
+
+        .flame.blown-out {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.1) !important;
+            animation: none;
+        }
+
+        .smoke {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            width: 7px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .smoke.rising {
+            animation: riseSmoke 1.5s ease-out forwards;
+        }
+
+        @keyframes riseSmoke {
+            0% { opacity: 0.85; transform: translate(-50%, 0) scale(1); }
+            100% { opacity: 0; transform: translate(-25%, -40px) scale(3); }
+        }
+
+        /* ==========================================================================
+           STAGE 3: 3D HOLOGRAPHIC TILT KEEPSAKE CARD
+           ========================================================================== */
+        .holo-perspective {
+            perspective: 1400px;
+        }
+
+        .holo-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.78), rgba(15, 23, 42, 0.85));
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.75),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
+            overflow: hidden;
+        }
+
+        /* Dynamic Holographic Shimmer Overlay */
+        .holo-glare {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(
+                circle at var(--glare-x, 50%) var(--glare-y, 50%),
+                rgba(255, 255, 255, 0.22) 0%,
+                rgba(251, 191, 36, 0.08) 30%,
+                transparent 65%
+            );
+            mix-blend-mode: screen;
+            z-index: 2;
+        }
+
+        /* ==========================================================================
+           STAGE 4: POPPABLE FLOATING WISH ORBS
+           ========================================================================== */
+        .wish-orb {
+            position: fixed;
+            z-index: 15;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.35), rgba(244, 63, 94, 0.25));
+            border: 1px solid rgba(253, 224, 71, 0.45);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.35);
+            color: #fef3c7;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: orbDrift var(--drift-duration, 16s) ease-in-out infinite alternate;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+
+        .wish-orb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 28px rgba(251, 191, 36, 0.7);
+        }
+
+        @keyframes orbDrift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(var(--dx, 25px), var(--dy, -30px)); }
+            100% { transform: translate(calc(var(--dx, 25px) * -0.7), calc(var(--dy, -30px) * 0.8)); }
+        }
+
+        /* Floating Toast for Popped Wishes */
+        .wish-toast {
+            position: fixed;
+            z-index: 50;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: toastFloat 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes toastFloat {
+            0% { opacity: 0; transform: translate(-50%, -20%) scale(0.8); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+            80% { opacity: 1; transform: translate(-50%, -85%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -115%) scale(0.95); }
+        }
+
+        /* Glowing Primary Button */
+        .btn-celestial {
+            background: linear-gradient(135deg, var(--accent-primary), #e11d48);
+            box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.55);
+            transition: all 0.25s ease;
+        }
+
+        .btn-celestial:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 32px -5px rgba(244, 63, 94, 0.8);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 sm:p-6 relative">
+
+    <!-- Interactive Starfield & Fireworks Canvas -->
+    <canvas id="cosmos-canvas"></canvas>
+
+    <!-- Floating Poppable Wish Orbs Layer (Activated in Stage 3) -->
+    <div id="wish-orbs-layer"></div>
+
+    <!-- Top Floating Utility Bar (Audio Toggle & Custom Link Builder) -->
+    <header class="fixed top-4 right-4 z-30 flex items-center gap-2">
+        <button id="music-toggle-btn" class="hidden px-3.5 py-2 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-white/15 backdrop-blur-md text-xs font-semibold text-amber-200 flex items-center gap-1.5 transition cursor-pointer" title="Toggle Music Box">
+            <span id="music-icon">🎵</span>
+            <span id="music-label">Playing</span>
+        </button>
+        <button id="open-builder-btn" class="px-3.5 py-2 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-white/15 backdrop-blur-md text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer" title="Personalize & Share Link">
+            <span>🔗</span>
+            <span>Create Custom Link</span>
+        </button>
+    </header>
+
+    <!-- ======================================================================
+         STAGE 1: SEALED CELESTIAL WAX ENVELOPE
+         ====================================================================== -->
+    <section id="stage-envelope" class="stage-transition relative z-10 w-full max-w-lg text-center my-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-300/25 text-amber-300 text-xs font-semibold tracking-widest uppercase mb-6">
+            <span>✨ Celestial Delivery ✨</span>
+        </div>
+
+        <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
+            A Special Delivery For <span id="env-recipient" class="text-amber-300">Alex</span>
+        </h1>
+        <p class="text-slate-300 text-sm mb-8">
+            Tap the golden wax seal to break the seal and begin your celebration.
+        </p>
+
+        <div class="envelope-wrapper">
+            <div id="envelope" class="envelope">
+                <!-- Inner Card Peek -->
+                <div class="envelope-letter-peek">
+                    <span class="text-xs uppercase tracking-widest text-amber-700 font-bold mb-1">Official Invitation</span>
+                    <p class="font-display text-xl font-extrabold text-slate-900">Make a Wish! 🎂</p>
+                </div>
+
+                <!-- Envelope Flaps -->
+                <div class="envelope-pocket"></div>
+                <div class="envelope-flap"></div>
+
+                <!-- Interactive Wax Seal -->
+                <button id="wax-seal-btn" class="wax-seal" aria-label="Break wax seal to open birthday card">
+                    <span class="font-display text-2xl font-extrabold text-amber-950">★</span>
+                </button>
+            </div>
+        </div>
+
+        <p class="text-xs text-slate-400 mt-8 animate-pulse">
+            ✦ Click anywhere on the golden seal ✦
+        </p>
+    </section>
+
+    <!-- ======================================================================
+         STAGE 2: INTERACTIVE CAKE & REAL MICROPHONE BLOW DETECTION
+         ====================================================================== -->
+    <section id="stage-cake" class="stage-transition stage-hidden relative z-10 w-full max-w-xl text-center my-auto">
+        <div class="bg-slate-900/60 backdrop-blur-xl border border-white/15 rounded-3xl p-6 sm:p-10 shadow-2xl">
+            <span class="inline-block px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-200 text-xs font-semibold uppercase tracking-wider mb-4">
+                Step 1 of 2 • Make Your Wish
+            </span>
+
+            <h2 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">
+                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-amber-200 via-rose-300 to-amber-200 bg-clip-text text-transparent">Alex</span>!
+            </h2>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto mb-6">
+                Close your eyes, make a wish, and either <strong>blow into your microphone</strong> or tap the candles to extinguish them!
+            </p>
+
+            <!-- Interactive Layered Cake -->
+            <div class="my-6 select-none">
+                <div id="cake" class="cake-container" role="button" tabindex="0" aria-label="Tap to blow out candles">
+                    <div class="candles-row">
+                        <div class="candle">
+                            <div class="flame" id="flame-1"></div>
+                            <div class="smoke" id="smoke-1"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame" id="flame-2"></div>
+                            <div class="smoke" id="smoke-2"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame" id="flame-3"></div>
+                            <div class="smoke" id="smoke-3"></div>
+                        </div>
+                    </div>
+                    <div class="tier-top"><div class="frosting"></div></div>
+                    <div class="tier-bottom"><div class="frosting"></div></div>
+                    <div class="plate"></div>
+                </div>
+            </div>
+
+            <!-- Microphone Blow Meter (Visible when Mic is enabled) -->
+            <div id="mic-meter-container" class="hidden max-w-xs mx-auto mb-5">
+                <div class="flex items-center justify-between text-xs text-amber-200 mb-1.5">
+                    <span>🎙️ Blow into your mic!</span>
+                    <span id="candles-left-label">3 candles lit</span>
+                </div>
+                <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden border border-white/10">
+                    <div id="mic-level-bar" class="h-full bg-gradient-to-r from-amber-400 to-rose-500 w-0 transition-all duration-75"></div>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                <button id="enable-mic-btn" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
+                    <span>🎙️</span>
+                    <span>Use Mic to Blow Candles</span>
+                </button>
+
+                <button id="tap-blow-btn" class="btn-celestial w-full sm:w-auto px-7 py-3.5 rounded-2xl text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer">
+                    <span>💨</span>
+                    <span>Tap to Blow Out Candles</span>
+                </button>
+            </div>
+            <p id="mic-status-msg" class="text-xs text-slate-400 mt-3"></p>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         STAGE 3 & 4: 3D HOLOGRAPHIC KEEPSAKE CARD + INTERACTIVE FIREWORKS
+         ====================================================================== -->
+    <section id="stage-celebration" class="stage-transition stage-hidden relative z-10 w-full max-w-2xl my-auto py-8">
+        <div class="holo-perspective">
+            <div id="holo-card" class="holo-card rounded-3xl p-6 sm:p-10 text-left">
+                <div class="holo-glare" id="holo-glare"></div>
+
+                <!-- Card Header -->
+                <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-white/15">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-amber-300">✨ Wish Unlocked ✨</span>
+                        <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                            Happy Birthday, <span id="card-recipient" class="text-amber-200">Alex</span>!
+                        </h2>
+                    </div>
+                    <div class="text-3xl sm:text-4xl">🥂</div>
+                </div>
+
+                <!-- Typewriter Heartfelt Message -->
+                <div class="relative z-10 my-6 min-h-[120px]">
+                    <p id="typewriter-message" class="text-slate-100 text-base sm:text-lg leading-relaxed whitespace-pre-line"></p>
+                </div>
+
+                <!-- Signature Footer -->
+                <div class="relative z-10 pt-5 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">With warmest wishes,</p>
+                        <p id="card-sender" class="font-script text-2xl sm:text-3xl text-amber-300 mt-0.5">
+                            Your Best Friend
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="launch-fireworks-btn" class="px-4 py-2.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/35 text-amber-200 text-xs font-semibold transition cursor-pointer">
+                            🎆 Launch Fireworks
+                        </button>
+                        <button id="replay-cake-btn" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 text-xs font-semibold transition cursor-pointer">
+                            🎂 Relight Cake
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-xs text-slate-300/80 mt-5">
+            💡 <strong>Tip:</strong> Tap anywhere in the night sky to launch fireworks, or pop the floating wish orbs!
+        </p>
+    </section>
+
+    <!-- ======================================================================
+         CUSTOM LINK GENERATOR MODAL (SHAREABLE GITHUB PAGES URL BUILDER)
+         ====================================================================== -->
+    <div id="builder-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="bg-slate-900 border border-white/20 rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl relative">
+            <button id="close-builder-btn" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl leading-none cursor-pointer" aria-label="Close modal">
+                &times;
+            </button>
+
+            <h3 class="font-display text-2xl font-bold text-white mb-1">Create a Custom Link 🔗</h3>
+            <p class="text-xs text-slate-400 mb-5">
+                Personalize this card for anyone and generate a ready-to-share URL—no code editing required!
+            </p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Recipient's Name</label>
+                    <input id="input-name" type="text" placeholder="e.g., Sarah" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name (From)</label>
+                    <input id="input-from" type="text" placeholder="e.g., Mike" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Birthday Message</label>
+                    <textarea id="input-msg" rows="3" placeholder="Write your heartfelt birthday wish..." class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button id="copy-link-btn" class="btn-celestial w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
+                        <span>📋</span>
+                        <span id="copy-btn-text">Generate & Copy Shareable Link</span>
+                    </button>
+                </div>
+
+                <div id="generated-url-box" class="hidden">
+                    <input id="generated-url-input" type="text" readonly class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-amber-400/30 text-amber-200 text-xs font-mono">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           🎨 EASY CUSTOMIZATION CONFIG (EDIT HERE FOR GITHUB PAGES!)
+           ========================================================================== */
+        const CONFIG = {
+            recipientName: "Alex",
+            senderName: "Your Best Friend",
+            message: "Wishing you a year as bright, bold, and extraordinary as the stars above.\n\nMay every adventure bring you joy, every challenge turn into triumph, and every wish you made tonight come true. Happy Birthday!",
+            // Floating poppable wish orbs that appear during the celebration
+            wishOrbs: [
+                "✨ Endless Joy",
+                "🚀 Bold Adventures",
+                "💖 Deep Love",
+                "🌟 Dream Big",
+                "🍀 Pure Luck",
+                "🥂 Unforgettable Memories"
+            ],
+            colors: {
+                bgDeep: "#050816",
+                bgNebula1: "#1e1b4b",
+                bgNebula2: "#3b0764",
+                primaryAccent: "#f43f5e",
+                goldAccent: "#fbbf24"
+            }
+        };
+
+        /* ==========================================================================
+           1. PERSONALIZATION & URL PARAMETER PARSING
+           ========================================================================== */
+        const urlParams = new URLSearchParams(window.location.search);
+        const state = {
+            recipient: (urlParams.get("name") || CONFIG.recipientName).trim(),
+            sender: (urlParams.get("from") || CONFIG.senderName).trim(),
+            message: (urlParams.get("msg") || CONFIG.message).trim(),
+            candlesRemaining: 3,
+            musicPlaying: false,
+            audioCtx: null,
+            musicInterval: null,
+            micStream: null,
+            micAnalyser: null
+        };
+
+        function applyPersonalization() {
+            document.title = `Happy Birthday, ${state.recipient}! ✨`;
+            document.getElementById("env-recipient").textContent = state.recipient;
+            document.getElementById("cake-recipient").textContent = state.recipient;
+            document.getElementById("card-recipient").textContent = state.recipient;
+            document.getElementById("card-sender").textContent = state.sender;
+
+            // Pre-fill custom link modal inputs
+            document.getElementById("input-name").value = state.recipient;
+            document.getElementById("input-from").value = state.sender;
+            document.getElementById("input-msg").value = state.message;
+
+            // Apply CSS custom properties
+            const root = document.documentElement;
+            root.style.setProperty("--bg-deep", CONFIG.colors.bgDeep);
+            root.style.setProperty("--bg-nebula-1", CONFIG.colors.bgNebula1);
+            root.style.setProperty("--bg-nebula-2", CONFIG.colors.bgNebula2);
+            root.style.setProperty("--accent-primary", CONFIG.colors.primaryAccent);
+            root.style.setProperty("--accent-gold", CONFIG.colors.goldAccent);
+        }
+
+        /* ==========================================================================
+           2. STAGE NAVIGATION (ENVELOPE -> CAKE -> CELEBRATION)
+           ========================================================================== */
+        const stageEnvelope = document.getElementById("stage-envelope");
+        const stageCake = document.getElementById("stage-cake");
+        const stageCelebration = document.getElementById("stage-celebration");
+        const envelopeEl = document.getElementById("envelope");
+        const waxSealBtn = document.getElementById("wax-seal-btn");
+
+        function switchStage(fromEl, toEl) {
+            fromEl.classList.add("stage-hidden");
+            setTimeout(() => {
+                toEl.classList.remove("stage-hidden");
+            }, 350);
+        }
+
+        // Stage 1: Break Wax Seal
+        waxSealBtn.addEventListener("click", () => {
+            envelopeEl.classList.add("opened");
+            playSparkleChime();
+            setTimeout(() => {
+                switchStage(stageEnvelope, stageCake);
+            }, 1150);
+        });
+
+        /* ==========================================================================
+           3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
+           ========================================================================== */
+        const flames = [
+            document.getElementById("flame-1"),
+            document.getElementById("flame-2"),
+            document.getElementById("flame-3")
+        ];
+        const smokes = [
+            document.getElementById("smoke-1"),
+            document.getElementById("smoke-2"),
+            document.getElementById("smoke-3")
+        ];
+        const enableMicBtn = document.getElementById("enable-mic-btn");
+        const tapBlowBtn = document.getElementById("tap-blow-btn");
+        const cakeEl = document.getElementById("cake");
+        const micMeterContainer = document.getElementById("mic-meter-container");
+        const micLevelBar = document.getElementById("mic-level-bar");
+        const micStatusMsg = document.getElementById("mic-status-msg");
+        const candlesLeftLabel = document.getElementById("candles-left-label");
+
+        function extinguishNextCandle() {
+            if (state.candlesRemaining <= 0) return;
+
+            const idx = 3 - state.candlesRemaining;
+            const flame = flames[idx];
+            const smoke = smokes[idx];
+
+            flame.classList.add("blown-out");
+            smoke.classList.remove("rising");
+            void smoke.offsetWidth;
+            smoke.classList.add("rising");
+
+            state.candlesRemaining--;
+            candlesLeftLabel.textContent = `${state.candlesRemaining} candle${state.candlesRemaining === 1 ? "" : "s"} lit`;
+
+            if (state.candlesRemaining === 0) {
+                stopMicrophone();
+                setTimeout(enterCelebrationStage, 650);
+            }
+        }
+
+        function blowAllCandlesImmediately() {
+            while (state.candlesRemaining > 0) {
+                extinguishNextCandle();
+            }
+        }
+
+        tapBlowBtn.addEventListener("click", blowAllCandlesImmediately);
+        cakeEl.addEventListener("click", () => {
+            if (state.candlesRemaining > 0) extinguishNextCandle();
+        });
+
+        // Microphone Wind/Blow Detection via Web Audio API
+        enableMicBtn.addEventListener("click", async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                state.micStream = stream;
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioCtx();
+                const source = audioCtx.createMediaStreamSource(stream);
+                const analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 256;
+                source.connect(analyser);
+                state.micAnalyser = analyser;
+
+                enableMicBtn.classList.add("hidden");
+                micMeterContainer.classList.remove("hidden");
+                micStatusMsg.textContent = "Listening... Blow steadily toward your microphone!";
+
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                let blowCooldown = false;
+
+                function detectBlow() {
+                    if (!state.micAnalyser || state.candlesRemaining <= 0) return;
+                    analyser.getByteFrequencyData(dataArray);
+
+                    // Low-frequency wind rumble energy (bins 0..18)
+                    let lowSum = 0;
+                    for (let i = 0; i < 18; i++) lowSum += dataArray[i];
+                    const avgVolume = lowSum / 18;
+
+                    const percent = Math.min(100, Math.round((avgVolume / 165) * 100));
+                    micLevelBar.style.width = `${percent}%`;
+
+                    // Tilt flames if gentle breeze detected
+                    flames.forEach(f => {
+                        if (!f.classList.contains("blown-out")) {
+                            f.classList.toggle("wind-tilt", avgVolume > 65);
+                        }
+                    });
+
+                    // Extinguish one candle per strong blow pulse
+                    if (avgVolume > 115 && !blowCooldown) {
+                        blowCooldown = true;
+                        extinguishNextCandle();
+                        setTimeout(() => { blowCooldown = false; }, 480);
+                    }
+
+                    requestAnimationFrame(detectBlow);
+                }
+                detectBlow();
+            } catch (err) {
+                micStatusMsg.textContent = "Microphone access unavailable—tap the candles or button to blow them out!";
+            }
+        });
+
+        function stopMicrophone() {
+            if (state.micStream) {
+                state.micStream.getTracks().forEach(track => track.stop());
+                state.micStream = null;
+            }
+            state.micAnalyser = null;
+        }
+
+        /* ==========================================================================
+           4. STAGE 3 & 4: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
+           ========================================================================== */
+        let fireworksActive = false;
+
+        function enterCelebrationStage() {
+            switchStage(stageCake, stageCelebration);
+            fireworksActive = true;
+
+            // Launch Confetti & Fireworks Salvo
+            triggerConfettiBurst();
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    launchFirework(
+                        window.innerWidth * (0.2 + Math.random() * 0.6),
+                        window.innerHeight * (0.15 + Math.random() * 0.35)
+                    );
+                }, i * 350);
+            }
+
+            // Start Music Box Melody
+            document.getElementById("music-toggle-btn").classList.remove("hidden");
+            startMusicBox();
+
+            // Typewriter Effect for Message
+            typeMessage(state.message, document.getElementById("typewriter-message"));
+
+            // Spawn Poppable Floating Wish Orbs
+            spawnWishOrbs();
+        }
+
+        function typeMessage(text, targetEl) {
+            targetEl.textContent = "";
+            let index = 0;
+            const interval = setInterval(() => {
+                targetEl.textContent += text.charAt(index);
+                index++;
+                if (index >= text.length) clearInterval(interval);
+            }, 26);
+        }
+
+        // 3D Holographic Card Tilt Physics
+        const holoCard = document.getElementById("holo-card");
+        const holoGlare = document.getElementById("holo-glare");
+
+        holoCard.addEventListener("mousemove", (e) => {
+            const rect = holoCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -7;
+            const rotateY = ((x - centerX) / centerX) * 7;
+
+            holoCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            holoGlare.style.setProperty("--glare-x", `${(x / rect.width) * 100}%`);
+            holoGlare.style.setProperty("--glare-y", `${(y / rect.height) * 100}%`);
+        });
+
+        holoCard.addEventListener("mouseleave", () => {
+            holoCard.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
+
+        // Replay / Relight Cake Button
+        document.getElementById("replay-cake-btn").addEventListener("click", () => {
+            state.candlesRemaining = 3;
+            candlesLeftLabel.textContent = "3 candles lit";
+            flames.forEach(f => f.classList.remove("blown-out", "wind-tilt"));
+            document.getElementById("wish-orbs-layer").innerHTML = "";
+            switchStage(stageCelebration, stageCake);
+        });
+
+        document.getElementById("launch-fireworks-btn").addEventListener("click", () => {
+            triggerConfettiBurst();
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    launchFirework(
+                        window.innerWidth * (0.15 + Math.random() * 0.7),
+                        window.innerHeight * (0.15 + Math.random() * 0.4)
+                    );
+                }, i * 250);
+            }
+        });
+
+        /* ==========================================================================
+           5. POPPABLE FLOATING WISH ORBS
+           ========================================================================== */
+        function spawnWishOrbs() {
+            const container = document.getElementById("wish-orbs-layer");
+            container.innerHTML = "";
+
+            CONFIG.wishOrbs.forEach((wishText, i) => {
+                const orb = document.createElement("button");
+                orb.className = "wish-orb";
+                orb.innerHTML = `<span>✨</span><span>Wish #${i + 1}</span>`;
+
+                // Position around screen edges so center card remains clear
+                const isLeft = i % 2 === 0;
+                const xPos = isLeft ? (4 + Math.random() * 14) : (74 + Math.random() * 14);
+                const yPos = 15 + (i * 12) % 70;
+
+                orb.style.left = `${xPos}%`;
+                orb.style.top = `${yPos}%`;
+                orb.style.setProperty("--drift-duration", `${12 + Math.random() * 8}s`);
+                orb.style.setProperty("--dx", `${(Math.random() - 0.5) * 40}px`);
+                orb.style.setProperty("--dy", `${(Math.random() - 0.5) * 40}px`);
+
+                orb.addEventListener("click", (e) => {
+                    playSparkleChime();
+                    launchFirework(e.clientX, e.clientY);
+
+                    // Show floating wish toast
+                    const toast = document.createElement("div");
+                    toast.className = "wish-toast px-4 py-2 rounded-full bg-amber-400 text-slate-950 font-bold text-sm shadow-xl";
+                    toast.textContent = wishText;
+                    toast.style.left = `${e.clientX}px`;
+                    toast.style.top = `${e.clientY}px`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2200);
+
+                    orb.style.transform = "scale(0)";
+                    orb.style.opacity = "0";
+                    setTimeout(() => orb.remove(), 300);
+                });
+
+                container.appendChild(orb);
+            });
+        }
+
+        /* ==========================================================================
+           6. WEB AUDIO API: SYNTHESIZED MUSIC BOX & CHIMES
+           ========================================================================== */
+        function playSparkleChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioCtx();
+                [587.33, 880, 1174.66].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+                    gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + idx * 0.08 + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.08 + 0.55);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.08);
+                    osc.stop(ctx.currentTime + idx * 0.08 + 0.6);
+                });
+            } catch (e) {}
+        }
+
+        function startMusicBox() {
+            if (state.musicPlaying) return;
+            state.musicPlaying = true;
+            updateMusicButtonUI();
+
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!state.audioCtx) state.audioCtx = new AudioCtx();
+                if (state.audioCtx.state === "suspended") state.audioCtx.resume();
+
+                // "Happy Birthday to You" Music Box Melody (freq in Hz, duration in beats)
+                const melody = [
+                    [261.63, 0.75], [261.63, 0.25], [293.66, 1], [261.63, 1], [349.23, 1], [329.63, 2],
+                    [261.63, 0.75], [261.63, 0.25], [293.66, 1], [261.63, 1], [392.00, 1], [349.23, 2],
+                    [261.63, 0.75], [261.63, 0.25], [523.25, 1], [440.00, 1], [349.23, 1], [329.63, 1], [293.66, 2],
+                    [466.16, 0.75], [466.16, 0.25], [440.00, 1], [349.23, 1], [392.00, 1], [349.23, 2.5]
+                ];
+
+                let step = 0;
+                const tempoMs = 420;
+
+                function playNextNote() {
+                    if (!state.musicPlaying) return;
+                    const [freq, beats] = melody[step];
+                    const now = state.audioCtx.currentTime;
+
+                    const osc = state.audioCtx.createOscillator();
+                    const gain = state.audioCtx.createGain();
+                    osc.type = "triangle";
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.exponentialRampToValueAtTime(0.11, now + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + beats * 0.45);
+
+                    osc.connect(gain);
+                    gain.connect(state.audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + beats * 0.48);
+
+                    step = (step + 1) % melody.length;
+                    state.musicInterval = setTimeout(playNextNote, beats * tempoMs);
+                }
+
+                playNextNote();
+            } catch (e) {
+                state.musicPlaying = false;
+                updateMusicButtonUI();
+            }
+        }
+
+        function stopMusicBox() {
+            state.musicPlaying = false;
+            clearTimeout(state.musicInterval);
+            updateMusicButtonUI();
+        }
+
+        function updateMusicButtonUI() {
+            document.getElementById("music-icon").textContent = state.musicPlaying ? "🎵" : "🔇";
+            document.getElementById("music-label").textContent = state.musicPlaying ? "Playing" : "Muted";
+        }
+
+        document.getElementById("music-toggle-btn").addEventListener("click", () => {
+            if (state.musicPlaying) stopMusicBox();
+            else startMusicBox();
+        });
+
+        function triggerConfettiBurst() {
+            if (typeof confetti !== "function") return;
+            confetti({
+                particleCount: 95,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: [CONFIG.colors.primaryAccent, CONFIG.colors.goldAccent, "#38bdf8", "#a855f7", "#ffffff"]
+            });
+        }
+
+        /* ==========================================================================
+           7. HTML5 CANVAS: TWINKLING STARFIELD & INTERACTIVE FIREWORKS
+           ========================================================================== */
+        const canvas = document.getElementById("cosmos-canvas");
+        const ctx = canvas.getContext("2d");
+        let stars = [];
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        }
+
+        function initStars() {
+            stars = [];
+            const count = Math.floor((canvas.width * canvas.height) / 9000);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.6 + 0.4,
+                    alpha: Math.random(),
+                    delta: (Math.random() * 0.015 + 0.005) * (Math.random() < 0.5 ? 1 : -1)
+                });
+            }
+        }
+
+        function launchFirework(x, y) {
+            const palette = ["#fbbf24", "#f43f5e", "#38bdf8", "#c084fc", "#34d399", "#ffffff"];
+            const color = palette[Math.floor(Math.random() * palette.length)];
+            const count = 48;
+
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2 * i) / count;
+                const speed = 1.8 + Math.random() * 3.8;
+                particles.push({
+                    x,
+                    y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    alpha: 1,
+                    color,
+                    size: 2 + Math.random() * 1.8
+                });
+            }
+        }
+
+        // Click anywhere on canvas to launch fireworks
+        canvas.addEventListener("click", (e) => {
+            launchFirework(e.clientX, e.clientY);
+        });
+
+        function animateCosmos() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw twinkling stars
+            for (const s of stars) {
+                s.alpha += s.delta;
+                if (s.alpha <= 0.15 || s.alpha >= 1) s.delta *= -1;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                ctx.fill();
+            }
+
+            // Draw firework particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.045; // gentle gravity
+                p.vx *= 0.985;
+                p.vy *= 0.985;
+                p.alpha -= 0.016;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Occasional ambient firework during celebration stage
+            if (fireworksActive && Math.random() < 0.025) {
+                launchFirework(
+                    canvas.width * (0.15 + Math.random() * 0.7),
+                    canvas.height * (0.12 + Math.random() * 0.38)
+                );
+            }
+
+            requestAnimationFrame(animateCosmos);
+        }
+
+        /* ==========================================================================
+           8. CUSTOM SHAREABLE LINK BUILDER MODAL
+           ========================================================================== */
+        const builderModal = document.getElementById("builder-modal");
+        const openBuilderBtn = document.getElementById("open-builder-btn");
+        const closeBuilderBtn = document.getElementById("close-builder-btn");
+        const copyLinkBtn = document.getElementById("copy-link-btn");
+        const copyBtnText = document.getElementById("copy-btn-text");
+        const generatedUrlBox = document.getElementById("generated-url-box");
+        const generatedUrlInput = document.getElementById("generated-url-input");
+
+        openBuilderBtn.addEventListener("click", () => {
+            builderModal.classList.remove("hidden");
+            builderModal.classList.add("flex");
+        });
+
+        closeBuilderBtn.addEventListener("click", () => {
+            builderModal.classList.add("hidden");
+            builderModal.classList.remove("flex");
+        });
+
+        copyLinkBtn.addEventListener("click", () => {
+            const nameVal = document.getElementById("input-name").value.trim() || CONFIG.recipientName;
+            const fromVal = document.getElementById("input-from").value.trim() || CONFIG.senderName;
+            const msgVal = document.getElementById("input-msg").value.trim() || CONFIG.message;
+
+            const baseUrl = window.location.origin + window.location.pathname;
+            const params = new URLSearchParams({
+                name: nameVal,
+                from: fromVal,
+                msg: msgVal
+            });
+            const shareUrl = `${baseUrl}?${params.toString()}`;
+
+            generatedUrlInput.value = shareUrl;
+            generatedUrlBox.classList.remove("hidden");
+            generatedUrlInput.select();
+            document.execCommand("copy");
+
+            copyBtnText.textContent = "Copied to Clipboard! ✓";
+            setTimeout(() => {
+                copyBtnText.textContent = "Generate & Copy Shareable Link";
+            }, 2500);
+        });
+
+        /* ==========================================================================
+           INITIALIZE ON LOAD
+           ========================================================================== */
+        window.addEventListener("resize", resizeCanvas);
+        window.onload = () => {
+            applyPersonalization();
+            resizeCanvas();
+            animateCosmos();
+        };
+    </script>
+</body>
+</html>
