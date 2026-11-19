@@ -30,7 +30,7 @@
             --glass-border: rgba(255, 255, 255, 0.16);
         }
 
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
         }
 
@@ -470,6 +470,62 @@
             transform: translateY(-2px);
             box-shadow: 0 15px 32px -5px rgba(244, 63, 94, 0.8);
         }
+
+        /* Shimmering Golden-Rose Surprise Gift Button */
+        .btn-surprise {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f59e0b, #f43f5e, #ec4899);
+            background-size: 200% 200%;
+            animation: surpriseGradient 4s ease infinite, surprisePulse 2.4s ease-in-out infinite;
+            box-shadow: 0 12px 30px -5px rgba(245, 158, 11, 0.55),
+                        0 0 0 1px rgba(253, 224, 71, 0.5);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+        }
+
+        .btn-surprise::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -75%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+            transform: rotate(25deg);
+            animation: shimmerSweep 3.2s infinite;
+        }
+
+        .btn-surprise:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 18px 38px -5px rgba(245, 158, 11, 0.8),
+                        0 0 0 2px rgba(253, 224, 71, 0.85);
+        }
+
+        @keyframes surpriseGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes surprisePulse {
+            0%, 100% { box-shadow: 0 12px 28px -5px rgba(245, 158, 11, 0.5), 0 0 0 0 rgba(251, 191, 36, 0.4); }
+            50% { box-shadow: 0 14px 34px -3px rgba(244, 63, 94, 0.7), 0 0 0 8px rgba(251, 191, 36, 0); }
+        }
+
+        @keyframes shimmerSweep {
+            0% { left: -75%; }
+            45%, 100% { left: 135%; }
+        }
+
+        /* Cinematic Video Modal Entrance */
+        @keyframes modalPopIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(18px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-animate-in {
+            animation: modalPopIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center p-4 sm:p-6 relative">
@@ -501,7 +557,7 @@
         </div>
 
         <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
-            A Special Delivery For <span id="env-recipient" class="text-amber-300">Zainab</span>
+            A Special Delivery For <span id="env-recipient" class="text-amber-300">Alex</span>
         </h1>
         <p class="text-slate-300 text-sm mb-8">
             Tap the golden wax seal to break the seal and begin your celebration.
@@ -541,7 +597,7 @@
             </span>
 
             <h2 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">
-                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-amber-200 via-rose-300 to-amber-200 bg-clip-text text-transparent">Zainab</span>!
+                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-amber-200 via-rose-300 to-amber-200 bg-clip-text text-transparent">Alex</span>!
             </h2>
 
             <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto mb-6">
@@ -611,7 +667,7 @@
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-amber-300">✨ Wish Unlocked ✨</span>
                         <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
-                            Happy Birthday, <span id="card-recipient" class="text-amber-200">Zainab</span>!
+                            Happy Birthday, <span id="card-recipient" class="text-amber-200">Alex</span>!
                         </h2>
                     </div>
                     <div class="text-3xl sm:text-4xl">🥂</div>
@@ -620,6 +676,22 @@
                 <!-- Typewriter Heartfelt Message -->
                 <div class="relative z-10 my-6 min-h-[120px]">
                     <p id="typewriter-message" class="text-slate-100 text-base sm:text-lg leading-relaxed whitespace-pre-line"></p>
+                </div>
+
+                <!-- Prominent Video Surprise Reveal CTA -->
+                <div id="surprise-cta-wrapper" class="relative z-10 my-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-500/15 border border-amber-300/35 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-500">
+                    <div class="text-center sm:text-left">
+                        <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-amber-300 mb-0.5">
+                            ✨ One More Thing...
+                        </span>
+                        <p class="text-sm text-slate-200 font-medium">
+                            We recorded a special video surprise just for you!
+                        </p>
+                    </div>
+                    <button id="open-surprise-btn" class="btn-surprise w-full sm:w-auto px-6 py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shrink-0 cursor-pointer">
+                        <span class="text-xl animate-bounce">🎁</span>
+                        <span>Click for a Surprise</span>
+                    </button>
                 </div>
 
                 <!-- Signature Footer -->
@@ -647,6 +719,57 @@
             💡 <strong>Tip:</strong> Tap anywhere in the night sky to launch fireworks, or pop the floating wish orbs!
         </p>
     </section>
+
+    <!-- ======================================================================
+         CINEMATIC VIDEO SURPRISE POPUP MODAL
+         ====================================================================== -->
+    <div id="video-surprise-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+        <div class="modal-animate-in relative w-full max-w-3xl rounded-3xl bg-slate-900/95 border border-amber-300/40 shadow-[0_0_60px_rgba(251,191,36,0.25)] overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-white/15 bg-gradient-to-r from-indigo-950/80 via-slate-900 to-rose-950/60">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">🎬</span>
+                    <div>
+                        <span class="block text-[10px] font-bold uppercase tracking-widest text-amber-300">Special Birthday Reveal</span>
+                        <h3 id="video-modal-title" class="font-display text-lg sm:text-xl font-bold text-white">
+                            A Video Surprise For <span id="video-recipient-name" class="text-amber-200">Zainab</span>
+                        </h3>
+                    </div>
+                </div>
+                <button id="close-video-btn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-500/80 text-slate-200 hover:text-white flex items-center justify-center text-xl transition cursor-pointer" aria-label="Close video surprise">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Responsive 16:9 Video Player Container -->
+            <div class="relative w-full aspect-video bg-black flex items-center justify-center" id="video-player-container">
+                <!-- Video element or iframe is dynamically injected here -->
+            </div>
+
+            <!-- Fallback / Helper Banner (Shown if default surprise.mp4 is not uploaded yet) -->
+            <div id="video-fallback-banner" class="hidden p-6 text-center bg-slate-900 border-t border-white/10">
+                <p class="text-amber-300 font-semibold text-sm mb-1">📹 Ready for Your Video!</p>
+                <p class="text-slate-300 text-xs max-w-lg mx-auto mb-4 leading-relaxed">
+                    Upload a video named <code class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-200">surprise.mp4</code> into your GitHub repository, paste a YouTube / Google Drive link in <code class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-200">CONFIG.videoUrl</code>, or preview a video file right now from your device:
+                </p>
+                <label class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 text-xs font-bold cursor-pointer transition">
+                    <span>📂 Preview Local Video File (.mp4 / .mov)</span>
+                    <input id="local-video-picker" type="file" accept="video/*" class="hidden">
+                </label>
+            </div>
+
+            <!-- Modal Footer Caption -->
+            <div class="px-6 py-4 bg-slate-950/60 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p id="video-caption-text" class="text-xs sm:text-sm text-slate-300 italic">
+                    Press play for a special birthday surprise made just for you! ❤️
+                </p>
+                <button id="done-video-btn" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition self-end sm:self-auto cursor-pointer">
+                    Back to Card ✨
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ======================================================================
          CUSTOM LINK GENERATOR MODAL (SHAREABLE GITHUB PAGES URL BUILDER)
@@ -678,6 +801,13 @@
                     <textarea id="input-msg" rows="3" placeholder="Write your heartfelt birthday wish..." class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400"></textarea>
                 </div>
 
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">
+                        Surprise Video URL <span class="text-slate-400 font-normal">(Optional: YouTube, Google Drive, or .mp4)</span>
+                    </label>
+                    <input id="input-video" type="text" placeholder="e.g., https://youtu.be/... or surprise.mp4" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                </div>
+
                 <div class="pt-2">
                     <button id="copy-link-btn" class="btn-celestial w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
                         <span>📋</span>
@@ -700,6 +830,11 @@
             recipientName: "Zainab",
             senderName: "Your Best Friend",
             message: "Wishing you a year as bright, bold, and extraordinary as the stars above.\n\nMay every adventure bring you joy, every challenge turn into triumph, and every wish you made tonight come true. Happy Birthday!",
+            // 🎬 SURPRISE VIDEO SETTINGS:
+            // Option A: Upload an MP4 file named "surprise.mp4" into the same GitHub folder as index.html
+            // Option B: Paste any YouTube link ("https://youtu.be/...") or Google Drive share link ("https://drive.google.com/file/d/.../view")
+            videoUrl: "surprise.mp4",
+            videoCaption: "Press play for a special birthday surprise made just for you! ❤️",
             // Floating poppable wish orbs that appear during the celebration
             wishOrbs: [
                 "✨ Endless Joy",
@@ -719,15 +854,17 @@
         };
 
         /* ==========================================================================
-           1. PERSONALIZATION & URL PARAMETER PARSING
+1. PERSONALIZATION & URL PARAMETER PARSING
            ========================================================================== */
         const urlParams = new URLSearchParams(window.location.search);
         const state = {
             recipient: (urlParams.get("name") || CONFIG.recipientName).trim(),
             sender: (urlParams.get("from") || CONFIG.senderName).trim(),
             message: (urlParams.get("msg") || CONFIG.message).trim(),
+            videoUrl: (urlParams.get("video") || CONFIG.videoUrl).trim(),
             candlesRemaining: 3,
             musicPlaying: false,
+            wasMusicPlayingBeforeVideo: false,
             audioCtx: null,
             musicInterval: null,
             micStream: null,
@@ -739,12 +876,15 @@
             document.getElementById("env-recipient").textContent = state.recipient;
             document.getElementById("cake-recipient").textContent = state.recipient;
             document.getElementById("card-recipient").textContent = state.recipient;
+            document.getElementById("video-recipient-name").textContent = state.recipient;
             document.getElementById("card-sender").textContent = state.sender;
+            document.getElementById("video-caption-text").textContent = CONFIG.videoCaption;
 
             // Pre-fill custom link modal inputs
             document.getElementById("input-name").value = state.recipient;
             document.getElementById("input-from").value = state.sender;
             document.getElementById("input-msg").value = state.message;
+            document.getElementById("input-video").value = state.videoUrl;
 
             // Apply CSS custom properties
             const root = document.documentElement;
@@ -756,7 +896,7 @@
         }
 
         /* ==========================================================================
-           2. STAGE NAVIGATION (ENVELOPE -> CAKE -> CELEBRATION)
+2. STAGE NAVIGATION (ENVELOPE -> CAKE -> CELEBRATION)
            ========================================================================== */
         const stageEnvelope = document.getElementById("stage-envelope");
         const stageCake = document.getElementById("stage-cake");
@@ -932,9 +1072,145 @@
             const interval = setInterval(() => {
                 targetEl.textContent += text.charAt(index);
                 index++;
-                if (index >= text.length) clearInterval(interval);
+                if (index >= text.length) {
+                    clearInterval(interval);
+                    // Highlight the surprise gift box gently once the letter finishes typing
+                    const ctaBox = document.getElementById("surprise-cta-wrapper");
+                    if (ctaBox) {
+                        ctaBox.classList.add("ring-2", "ring-amber-300/60", "shadow-lg");
+                    }
+                }
             }, 26);
         }
+
+        /* ==========================================================================
+           4B. CINEMATIC VIDEO SURPRISE POPUP LOGIC (MP4, YOUTUBE, GOOGLE DRIVE, VIMEO)
+           ========================================================================== */
+        const videoModal = document.getElementById("video-surprise-modal");
+        const videoContainer = document.getElementById("video-player-container");
+        const videoFallbackBanner = document.getElementById("video-fallback-banner");
+        const openSurpriseBtn = document.getElementById("open-surprise-btn");
+        const closeVideoBtn = document.getElementById("close-video-btn");
+        const doneVideoBtn = document.getElementById("done-video-btn");
+        const localVideoPicker = document.getElementById("local-video-picker");
+
+        function parseVideoEmbed(url) {
+            if (!url) return { type: "none" };
+
+            // YouTube (watch, youtu.be, shorts, embed)
+            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (ytMatch && ytMatch[1]) {
+                return {
+                    type: "iframe",
+                    src: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`
+                };
+            }
+
+            // Google Drive share link -> preview embed
+            const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (driveMatch && driveMatch[1]) {
+                return {
+                    type: "iframe",
+                    src: `https://drive.google.com/file/d/${driveMatch[1]}/preview`
+                };
+            }
+
+            // Vimeo link
+            const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+            if (vimeoMatch && vimeoMatch[1]) {
+                return {
+                    type: "iframe",
+                    src: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`
+                };
+            }
+
+            // Direct video file (.mp4, .webm, .ogg, or blob URL)
+            return {
+                type: "video",
+                src: url
+            };
+        }
+
+        function renderVideoSource(url) {
+            videoContainer.innerHTML = "";
+            videoFallbackBanner.classList.add("hidden");
+
+            const parsed = parseVideoEmbed(url);
+
+            if (parsed.type === "iframe") {
+                const iframe = document.createElement("iframe");
+                iframe.src = parsed.src;
+                iframe.className = "w-full h-full border-0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+                iframe.allowFullscreen = true;
+                videoContainer.appendChild(iframe);
+            } else if (parsed.type === "video") {
+                const video = document.createElement("video");
+                video.src = parsed.src;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                video.className = "w-full h-full object-contain bg-black";
+
+                // If surprise.mp4 isn't uploaded yet on GitHub, show the friendly uploader/guide
+                video.addEventListener("error", () => {
+                    videoFallbackBanner.classList.remove("hidden");
+                });
+
+                videoContainer.appendChild(video);
+            } else {
+                videoFallbackBanner.classList.remove("hidden");
+            }
+        }
+
+        function openVideoSurprise() {
+            // Pause background music box so video audio is clear
+            state.wasMusicPlayingBeforeVideo = state.musicPlaying;
+            if (state.musicPlaying) {
+                stopMusicBox();
+            }
+
+            playSparkleChime();
+            triggerConfettiBurst();
+
+            renderVideoSource(state.videoUrl);
+            videoModal.classList.remove("hidden");
+            videoModal.classList.add("flex");
+        }
+
+        function closeVideoSurprise() {
+            videoModal.classList.add("hidden");
+            videoModal.classList.remove("flex");
+            // Stop video playback completely on close
+            videoContainer.innerHTML = "";
+
+            // Resume music box if it was playing before opening the video
+            if (state.wasMusicPlayingBeforeVideo) {
+                startMusicBox();
+            }
+        }
+
+        openSurpriseBtn.addEventListener("click", openVideoSurprise);
+        closeVideoBtn.addEventListener("click", closeVideoSurprise);
+        doneVideoBtn.addEventListener("click", closeVideoSurprise);
+
+        // Close modal when clicking outside the cinema frame or pressing Escape
+        videoModal.addEventListener("click", (e) => {
+            if (e.target === videoModal) closeVideoSurprise();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !videoModal.classList.contains("hidden")) {
+                closeVideoSurprise();
+            }
+        });
+
+        // Allow instant testing with a local video file from device
+        localVideoPicker.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const objectUrl = URL.createObjectURL(file);
+            renderVideoSource(objectUrl);
+        });
 
         // 3D Holographic Card Tilt Physics
         const holoCard = document.getElementById("holo-card");
@@ -1253,6 +1529,7 @@
             const nameVal = document.getElementById("input-name").value.trim() || CONFIG.recipientName;
             const fromVal = document.getElementById("input-from").value.trim() || CONFIG.senderName;
             const msgVal = document.getElementById("input-msg").value.trim() || CONFIG.message;
+            const videoVal = document.getElementById("input-video").value.trim();
 
             const baseUrl = window.location.origin + window.location.pathname;
             const params = new URLSearchParams({
@@ -1260,6 +1537,9 @@
                 from: fromVal,
                 msg: msgVal
             });
+            if (videoVal && videoVal !== CONFIG.videoUrl) {
+                params.set("video", videoVal);
+            }
             const shareUrl = `${baseUrl}?${params.toString()}`;
 
             generatedUrlInput.value = shareUrl;
