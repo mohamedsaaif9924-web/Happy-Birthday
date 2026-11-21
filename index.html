@@ -557,7 +557,7 @@
         </div>
 
         <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
-            A Special Delivery For <span id="env-recipient" class="text-amber-300">Alex</span>
+            A Special Delivery For <span id="env-recipient" class="text-amber-300">Zainab</span>
         </h1>
         <p class="text-slate-300 text-sm mb-8">
             Tap the golden wax seal to break the seal and begin your celebration.
@@ -597,7 +597,7 @@
             </span>
 
             <h2 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">
-                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-amber-200 via-rose-300 to-amber-200 bg-clip-text text-transparent">Alex</span>!
+                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-amber-200 via-rose-300 to-amber-200 bg-clip-text text-transparent">Zainab</span>!
             </h2>
 
             <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto mb-6">
@@ -667,7 +667,7 @@
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-amber-300">✨ Wish Unlocked ✨</span>
                         <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
-                            Happy Birthday, <span id="card-recipient" class="text-amber-200">Alex</span>!
+                            Happy Birthday, <span id="card-recipient" class="text-amber-200">Zainab</span>!
                         </h2>
                     </div>
                     <div class="text-3xl sm:text-4xl">🥂</div>
@@ -699,7 +699,7 @@
                     <div>
                         <p class="text-xs text-slate-400 uppercase tracking-wider">With warmest wishes,</p>
                         <p id="card-sender" class="font-script text-2xl sm:text-3xl text-amber-300 mt-0.5">
-                            Your Best Friend
+                            Your Husband
                         </p>
                     </div>
 
@@ -830,10 +830,7 @@
             recipientName: "Zainab",
             senderName: "Your Husband",
             message: "Wishing you a year as bright, bold, and extraordinary as the stars above.\n\nMay every adventure bring you joy, every challenge turn into triumph, and every wish you made tonight come true. Happy Birthday!",
-            // 🎬 SURPRISE VIDEO SETTINGS:
-            // Option A: Upload an MP4 file named "surprise.mp4" into the same GitHub folder as index.html
-            // Option B: Paste any YouTube link ("https://youtu.be/...") or Google Drive share link ("https://drive.google.com/file/d/.../view")
-            videoUrl: "surprise.mp4",
+            videoUrl: "https://drive.google.com/file/d/17mzbEYTd5xyqSCtciLKI7inunQvc8h--/view?usp=drivesdk",
             videoCaption: "Press play for a special birthday surprise made just for you! ❤️",
             // Floating poppable wish orbs that appear during the celebration
             wishOrbs: [
@@ -921,7 +918,7 @@
         });
 
         /* ==========================================================================
-           3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
+3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
            ========================================================================== */
         const flames = [
             document.getElementById("flame-1"),
@@ -1036,7 +1033,7 @@
         }
 
         /* ==========================================================================
-           4. STAGE 3 & 4: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
+4. STAGE 3 & 4: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
            ========================================================================== */
         let fireworksActive = false;
 
@@ -1257,7 +1254,7 @@
         });
 
         /* ==========================================================================
-           5. POPPABLE FLOATING WISH ORBS
+5. POPPABLE FLOATING WISH ORBS
            ========================================================================== */
         function spawnWishOrbs() {
             const container = document.getElementById("wish-orbs-layer");
@@ -1302,7 +1299,7 @@
         }
 
         /* ==========================================================================
-           6. WEB AUDIO API: SYNTHESIZED MUSIC BOX & CHIMES
+6. WEB AUDIO API: SYNTHESIZED MUSIC BOX & CHIMES
            ========================================================================== */
         function playSparkleChime() {
             try {
@@ -1402,7 +1399,7 @@
         }
 
         /* ==========================================================================
-           7. HTML5 CANVAS: TWINKLING STARFIELD & INTERACTIVE FIREWORKS
+7. HTML5 CANVAS: TWINKLING STARFIELD & INTERACTIVE FIREWORKS
            ========================================================================== */
         const canvas = document.getElementById("cosmos-canvas");
         const ctx = canvas.getContext("2d");
@@ -1505,7 +1502,7 @@
         }
 
         /* ==========================================================================
-           8. CUSTOM SHAREABLE LINK BUILDER MODAL
+8. CUSTOM SHAREABLE LINK BUILDER MODAL
            ========================================================================== */
         const builderModal = document.getElementById("builder-modal");
         const openBuilderBtn = document.getElementById("open-builder-btn");
