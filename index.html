@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Celestial Birthday Surprise ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>A Birthday Love Letter ✨</title>
     
     <!-- Google Fonts: Playfair Display, Plus Jakarta Sans, and Dancing Script -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,44 +20,54 @@
 
     <style>
         /* ==========================================================================
-           CUSTOM CELESTIAL THEME VARIABLES & ANIMATIONS
+           ROMANTIC LOVE THEME VARIABLES & CROSS-DEVICE VIEWPORT FIXES
            ========================================================================== */
         :root {
-            --bg-deep: #050816;
-            --bg-nebula-1: #1e1b4b;
-            --bg-nebula-2: #3b0764;
+            --bg-deep: #14050d;
+            --bg-glow-1: #4c0519;
+            --bg-glow-2: #581c87;
             --accent-primary: #f43f5e;
             --accent-gold: #fbbf24;
-            --glass-bg: rgba(15, 23, 42, 0.58);
+            --glass-bg: rgba(30, 10, 22, 0.62);
             --glass-border: rgba(255, 255, 255, 0.16);
         }
 
         *, *::before, *::after {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at 20% 20%, var(--bg-nebula-1), transparent 50%),
-                        radial-gradient(circle at 80% 80%, var(--bg-nebula-2), transparent 50%),
+        html, body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at 20% 20%, var(--bg-glow-1), transparent 55%),
+                        radial-gradient(circle at 80% 80%, var(--bg-glow-2), transparent 55%),
                         var(--bg-deep);
             color: #ffffff;
             min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
             margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
             user-select: none;
         }
 
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
+            font-size: 16px !important; /* Prevents iOS Safari auto-zoom on input focus */
+        }
+
         .font-display {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Playfair Display', Georgia, serif;
         }
 
         .font-script {
             font-family: 'Dancing Script', cursive;
         }
 
-        /* Full-Screen Starfield & Interactive Fireworks Canvas */
-        #cosmos-canvas {
+        /* Full-Screen Floating Hearts & Interactive Fireworks Canvas */
+        #romance-canvas {
             position: fixed;
             inset: 0;
             width: 100%;
@@ -65,7 +77,7 @@
         }
 
         /* ==========================================================================
-           STAGE 1: 3D WAX-SEALED CELESTIAL ENVELOPE
+           STAGE 1: 3D WAX-SEALED LOVE LETTER ENVELOPE
            ========================================================================== */
         .stage-transition {
             transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
@@ -82,6 +94,7 @@
         }
 
         .envelope-wrapper {
+            -webkit-perspective: 1200px;
             perspective: 1200px;
             width: 100%;
             max-width: 420px;
@@ -91,26 +104,29 @@
         .envelope {
             position: relative;
             width: 100%;
-            height: 260px;
-            background: linear-gradient(145deg, #1e1b4b, #0f172a);
-            border: 1px solid rgba(251, 191, 36, 0.35);
+            height: 250px;
+            background: linear-gradient(145deg, #4c0519, #1f0712);
+            border: 1px solid rgba(251, 113, 133, 0.4);
             border-radius: 18px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
-                        0 0 40px rgba(251, 191, 36, 0.15);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                        0 0 45px rgba(244, 63, 94, 0.2);
+            -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             transition: transform 0.6s ease;
         }
 
-        .envelope:hover {
-            transform: translateY(-6px) rotateX(4deg);
+        @media (hover: hover) {
+            .envelope:hover {
+                transform: translateY(-6px) rotateX(4deg);
+            }
         }
 
         .envelope-letter-peek {
             position: absolute;
             inset: 14px;
-            background: linear-gradient(180deg, #fffbeb, #fef3c7);
+            background: linear-gradient(180deg, #fff1f2, #ffe4e6);
             border-radius: 12px;
-            color: #1e1b4b;
+            color: #4c0519;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -121,7 +137,7 @@
         }
 
         .envelope.opened .envelope-letter-peek {
-            transform: translateY(-95px);
+            transform: translateY(-90px);
         }
 
         .envelope-pocket {
@@ -140,16 +156,18 @@
             left: 0;
             right: 0;
             height: 65%;
-            background: linear-gradient(180deg, #1e293b, #0f172a);
+            background: linear-gradient(180deg, #3b0718, #1c060f);
+            -webkit-clip-path: polygon(0 100%, 50% 25%, 100% 100%);
             clip-path: polygon(0 100%, 50% 25%, 100% 100%);
-            border-top: 1px solid rgba(251, 191, 36, 0.25);
+            border-top: 1px solid rgba(251, 113, 133, 0.28);
         }
 
         .envelope-pocket::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(30, 41, 59, 0.95) 0%, transparent 45%, transparent 55%, rgba(30, 41, 59, 0.95) 100%);
+            background: linear-gradient(90deg, rgba(59, 7, 24, 0.95) 0%, transparent 45%, transparent 55%, rgba(59, 7, 24, 0.95) 100%);
+            -webkit-clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
             clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
         }
 
@@ -159,12 +177,13 @@
             left: 0;
             right: 0;
             height: 58%;
-            background: linear-gradient(180deg, #312e81, #1e1b4b);
+            background: linear-gradient(180deg, #881337, #4c0519);
+            -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             transform-origin: top center;
             transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.35s;
             z-index: 4;
-            border-top: 1px solid rgba(251, 191, 36, 0.5);
+            border-top: 1px solid rgba(251, 113, 133, 0.5);
         }
 
         .envelope.opened .envelope-flap {
@@ -177,26 +196,25 @@
             top: 52%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 74px;
-            height: 74px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fde68a, #f59e0b 60%, #b45309);
+            background: radial-gradient(circle at 30% 30%, #fda4af, #e11d48 60%, #881337);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6),
-                        inset 0 2px 4px rgba(255, 255, 255, 0.7),
-                        0 0 0 5px rgba(245, 158, 11, 0.25);
+                        inset 0 2px 4px rgba(255, 255, 255, 0.65),
+                        0 0 0 5px rgba(244, 63, 94, 0.28);
             z-index: 5;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            border: none;
             transition: transform 0.3s ease, opacity 0.4s ease, box-shadow 0.3s ease;
             animation: sealPulse 2.5s infinite ease-in-out;
         }
 
-        .wax-seal:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 12px 28px rgba(245, 158, 11, 0.5),
-                        inset 0 2px 6px rgba(255, 255, 255, 0.9);
+        .wax-seal:active {
+            transform: translate(-50%, -50%) scale(0.95);
         }
 
         .envelope.opened .wax-seal {
@@ -206,8 +224,8 @@
         }
 
         @keyframes sealPulse {
-            0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 0 4px rgba(251, 191, 36, 0.2); }
-            50% { box-shadow: 0 8px 25px rgba(251, 191, 36, 0.45), 0 0 0 10px rgba(251, 191, 36, 0.05); }
+            0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 0 4px rgba(244, 63, 94, 0.25); }
+            50% { box-shadow: 0 8px 25px rgba(244, 63, 94, 0.5), 0 0 0 10px rgba(244, 63, 94, 0.06); }
         }
 
         /* ==========================================================================
@@ -224,10 +242,6 @@
             justify-content: flex-end;
             cursor: pointer;
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .cake-container:hover {
-            transform: scale(1.03);
         }
 
         .plate {
@@ -371,20 +385,22 @@
         }
 
         /* ==========================================================================
-           STAGE 3: 3D HOLOGRAPHIC TILT KEEPSAKE CARD
+           STAGE 3: 3D HOLOGRAPHIC TILT LOVE CARD
            ========================================================================== */
         .holo-perspective {
+            -webkit-perspective: 1400px;
             perspective: 1400px;
         }
 
         .holo-card {
             position: relative;
-            background: linear-gradient(135deg, rgba(30, 27, 75, 0.78), rgba(15, 23, 42, 0.85));
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            border: 1px solid rgba(251, 191, 36, 0.35);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.75),
-                        inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(60, 12, 34, 0.84), rgba(24, 9, 20, 0.9));
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(251, 113, 133, 0.35);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.22);
+            -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             transition: transform 0.15s ease-out;
             overflow: hidden;
@@ -396,8 +412,8 @@
             pointer-events: none;
             background: radial-gradient(
                 circle at var(--glare-x, 50%) var(--glare-y, 50%),
-                rgba(255, 255, 255, 0.22) 0%,
-                rgba(251, 191, 36, 0.08) 30%,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(244, 63, 94, 0.12) 32%,
                 transparent 65%
             );
             mix-blend-mode: screen;
@@ -405,31 +421,27 @@
         }
 
         /* ==========================================================================
-           STAGE 4: POPPABLE FLOATING WISH ORBS
+           STAGE 4: POPPABLE FLOATING LOVE NOTES
            ========================================================================== */
         .wish-orb {
             position: fixed;
             z-index: 15;
-            padding: 10px 16px;
+            padding: 8px 14px;
             border-radius: 999px;
-            background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.35), rgba(244, 63, 94, 0.25));
-            border: 1px solid rgba(253, 224, 71, 0.45);
+            background: radial-gradient(circle at 30% 30%, rgba(244, 63, 94, 0.45), rgba(251, 191, 36, 0.25));
+            border: 1px solid rgba(253, 164, 175, 0.48);
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.35);
-            color: #fef3c7;
-            font-size: 0.8rem;
+            box-shadow: 0 0 22px rgba(244, 63, 94, 0.38);
+            color: #ffe4e6;
+            font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             animation: orbDrift var(--drift-duration, 16s) ease-in-out infinite alternate;
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
-        }
-
-        .wish-orb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 28px rgba(251, 191, 36, 0.7);
         }
 
         @keyframes orbDrift {
@@ -453,25 +465,20 @@
             100% { opacity: 0; transform: translate(-50%, -115%) scale(0.95); }
         }
 
-        .btn-celestial {
+        .btn-romance {
             background: linear-gradient(135deg, var(--accent-primary), #e11d48);
             box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.55);
             transition: all 0.25s ease;
         }
 
-        .btn-celestial:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 32px -5px rgba(244, 63, 94, 0.8);
-        }
-
         .btn-surprise {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #f59e0b, #f43f5e, #ec4899);
+            background: linear-gradient(135deg, #f43f5e, #ec4899, #f59e0b);
             background-size: 200% 200%;
             animation: surpriseGradient 4s ease infinite, surprisePulse 2.4s ease-in-out infinite;
-            box-shadow: 0 12px 30px -5px rgba(245, 158, 11, 0.55),
-                        0 0 0 1px rgba(253, 224, 71, 0.5);
+            box-shadow: 0 12px 30px -5px rgba(244, 63, 94, 0.55),
+                        0 0 0 1px rgba(253, 164, 175, 0.5);
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
         }
 
@@ -487,12 +494,6 @@
             animation: shimmerSweep 3.2s infinite;
         }
 
-        .btn-surprise:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 18px 38px -5px rgba(245, 158, 11, 0.8),
-                        0 0 0 2px rgba(253, 224, 71, 0.85);
-        }
-
         @keyframes surpriseGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -500,8 +501,8 @@
         }
 
         @keyframes surprisePulse {
-            0%, 100% { box-shadow: 0 12px 28px -5px rgba(245, 158, 11, 0.5), 0 0 0 0 rgba(251, 191, 36, 0.4); }
-            50% { box-shadow: 0 14px 34px -3px rgba(244, 63, 94, 0.7), 0 0 0 8px rgba(251, 191, 36, 0); }
+            0%, 100% { box-shadow: 0 12px 28px -5px rgba(244, 63, 94, 0.5), 0 0 0 0 rgba(244, 63, 94, 0.4); }
+            50% { box-shadow: 0 14px 34px -3px rgba(236, 72, 153, 0.75), 0 0 0 8px rgba(244, 63, 94, 0); }
         }
 
         @keyframes shimmerSweep {
@@ -518,7 +519,6 @@
             animation: modalPopIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        /* Shake animation for wrong password */
         @keyframes shakeError {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
@@ -529,67 +529,77 @@
             animation: shakeError 0.4s ease-in-out;
         }
 
-        /* Instagram Reel 9:16 Vertical Frame Sizing */
-        .reel-frame {
-            aspect-ratio: 9 / 16;
-            max-height: 72vh;
+        /* Cross-Browser Instagram Reel 9:16 Vertical Frame (iOS Safari + Android + Desktop) */
+        .reel-modal-card {
             width: 100%;
+            max-width: 370px;
+            max-height: calc(100dvh - 24px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        .reel-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            max-height: 66dvh;
+            background: #000000;
+            overflow: hidden;
         }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center p-4 sm:p-6 relative">
 
-    <!-- Interactive Starfield & Fireworks Canvas -->
-    <canvas id="cosmos-canvas"></canvas>
+    <!-- Interactive Floating Hearts & Fireworks Canvas -->
+    <canvas id="romance-canvas"></canvas>
 
-    <!-- Floating Poppable Wish Orbs Layer (Activated in Stage 3) -->
+    <!-- Floating Poppable Love Notes Layer -->
     <div id="wish-orbs-layer"></div>
 
     <!-- Top Floating Utility Bar -->
-    <header class="fixed top-4 right-4 z-30 flex items-center gap-2">
-        <button id="music-toggle-btn" class="hidden px-3.5 py-2 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-white/15 backdrop-blur-md text-xs font-semibold text-amber-200 flex items-center gap-1.5 transition cursor-pointer" title="Toggle Music Box">
+    <header class="fixed top-4 right-4 z-30 flex items-center gap-2" style="padding-top: env(safe-area-inset-top, 0px);">
+        <button id="music-toggle-btn" class="hidden px-3.5 py-2 rounded-full bg-rose-950/80 hover:bg-rose-900 border border-rose-300/20 backdrop-blur-md text-xs font-semibold text-rose-200 flex items-center gap-1.5 transition cursor-pointer" title="Toggle Music Box">
             <span id="music-icon">🎵</span>
             <span id="music-label">Playing</span>
         </button>
-        <button id="open-builder-btn" class="px-3.5 py-2 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-white/15 backdrop-blur-md text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer" title="Personalize & Share Link">
+        <button id="open-builder-btn" class="px-3.5 py-2 rounded-full bg-rose-950/80 hover:bg-rose-900 border border-rose-300/20 backdrop-blur-md text-xs font-semibold text-rose-100 flex items-center gap-1.5 transition cursor-pointer" title="Personalize & Share Link">
             <span>🔗</span>
             <span>Create Custom Link</span>
         </button>
     </header>
 
     <!-- ======================================================================
-         STAGE 1: SEALED CELESTIAL WAX ENVELOPE
+         STAGE 1: SEALED LOVE LETTER ENVELOPE
          ====================================================================== -->
     <section id="stage-envelope" class="stage-transition relative z-10 w-full max-w-lg text-center my-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-300/25 text-amber-300 text-xs font-semibold tracking-widest uppercase mb-6">
-            <span>✨ Celestial Delivery ✨</span>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/15 border border-rose-300/30 text-rose-200 text-xs font-semibold tracking-widest uppercase mb-6">
+            <span>💌 A Love Letter For You 💌</span>
         </div>
 
         <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
-            A Special Delivery For <span id="env-recipient" class="text-amber-300">Zainab</span>
+            Especially For My Love, <span id="env-recipient" class="text-rose-300">Zainab</span>
         </h1>
-        <p class="text-slate-300 text-sm mb-8">
-            Tap the golden wax seal to break the seal and begin your celebration.
+        <p class="text-rose-100/80 text-sm mb-8">
+            Tap the heart seal to open your birthday letter.
         </p>
 
         <div class="envelope-wrapper">
             <div id="envelope" class="envelope">
                 <div class="envelope-letter-peek">
-                    <span class="text-xs uppercase tracking-widest text-amber-700 font-bold mb-1">Official Invitation</span>
-                    <p class="font-display text-xl font-extrabold text-slate-900">Make a Wish! 🎂</p>
+                    <span class="text-xs uppercase tracking-widest text-rose-700 font-bold mb-1">With All My Heart</span>
+                    <p class="font-display text-xl font-extrabold text-rose-950">Make a Wish, My Love! 🎂</p>
                 </div>
 
                 <div class="envelope-pocket"></div>
                 <div class="envelope-flap"></div>
 
-                <button id="wax-seal-btn" class="wax-seal" aria-label="Break wax seal to open birthday card">
-                    <span class="font-display text-2xl font-extrabold text-amber-950">★</span>
+                <button id="wax-seal-btn" class="wax-seal" aria-label="Break wax seal to open birthday love letter">
+                    <span class="text-2xl text-white drop-shadow">♥</span>
                 </button>
             </div>
         </div>
 
-        <p class="text-xs text-slate-400 mt-8 animate-pulse">
-            ✦ Click anywhere on the golden seal ✦
+        <p class="text-xs text-rose-200/70 mt-8 animate-pulse">
+            ♥ Tap the crimson heart seal ♥
         </p>
     </section>
 
@@ -597,17 +607,17 @@
          STAGE 2: INTERACTIVE CAKE & REAL MICROPHONE BLOW DETECTION
          ====================================================================== -->
     <section id="stage-cake" class="stage-transition stage-hidden relative z-10 w-full max-w-xl text-center my-auto">
-        <div class="bg-slate-900/60 backdrop-blur-xl border border-white/15 rounded-3xl p-6 sm:p-10 shadow-2xl">
+        <div class="bg-rose-950/65 backdrop-blur-xl border border-rose-300/20 rounded-3xl p-6 sm:p-10 shadow-2xl">
             <span class="inline-block px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-200 text-xs font-semibold uppercase tracking-wider mb-4">
-                Step 1 of 2 • Make Your Wish
+                Step 1 of 2 • Make Your Birthday Wish
             </span>
 
             <h2 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">
-                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-amber-200 via-rose-300 to-amber-200 bg-clip-text text-transparent">Zainab</span>!
+                Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-rose-200 via-amber-200 to-rose-200 bg-clip-text text-transparent">Zainab</span>!
             </h2>
 
-            <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto mb-6">
-                Close your eyes, make a wish, and either <strong>blow into your microphone</strong> or tap the candles to extinguish them!
+            <p class="text-rose-100/85 text-sm sm:text-base max-w-md mx-auto mb-6">
+                Close your eyes, make a wish, and either <strong>blow into your microphone</strong> or tap the candles to blow them out!
             </p>
 
             <div class="my-6 select-none">
@@ -633,60 +643,60 @@
             </div>
 
             <div id="mic-meter-container" class="hidden max-w-xs mx-auto mb-5">
-                <div class="flex items-center justify-between text-xs text-amber-200 mb-1.5">
+                <div class="flex items-center justify-between text-xs text-rose-200 mb-1.5">
                     <span>🎙️ Blow into your mic!</span>
                     <span id="candles-left-label">3 candles lit</span>
                 </div>
-                <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden border border-white/10">
-                    <div id="mic-level-bar" class="h-full bg-gradient-to-r from-amber-400 to-rose-500 w-0 transition-all duration-75"></div>
+                <div class="w-full h-2.5 bg-rose-950 rounded-full overflow-hidden border border-white/10">
+                    <div id="mic-level-bar" class="h-full bg-gradient-to-r from-rose-400 to-amber-400 w-0 transition-all duration-75"></div>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
-                <button id="enable-mic-btn" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
+                <button id="enable-mic-btn" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/40 text-rose-100 font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
                     <span>🎙️</span>
                     <span>Use Mic to Blow Candles</span>
                 </button>
 
-                <button id="tap-blow-btn" class="btn-celestial w-full sm:w-auto px-7 py-3.5 rounded-2xl text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer">
+                <button id="tap-blow-btn" class="btn-romance w-full sm:w-auto px-7 py-3.5 rounded-2xl text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer">
                     <span>💨</span>
                     <span>Tap to Blow Out Candles</span>
                 </button>
             </div>
-            <p id="mic-status-msg" class="text-xs text-slate-400 mt-3"></p>
+            <p id="mic-status-msg" class="text-xs text-rose-200/70 mt-3"></p>
         </div>
     </section>
 
     <!-- ======================================================================
-         STAGE 3 & 4: 3D HOLOGRAPHIC KEEPSAKE CARD + INTERACTIVE FIREWORKS
+         STAGE 3 & 4: 3D HOLOGRAPHIC LOVE CARD + INTERACTIVE FIREWORKS
          ====================================================================== -->
     <section id="stage-celebration" class="stage-transition stage-hidden relative z-10 w-full max-w-2xl my-auto py-8">
         <div class="holo-perspective">
             <div id="holo-card" class="holo-card rounded-3xl p-6 sm:p-10 text-left">
                 <div class="holo-glare" id="holo-glare"></div>
 
-                <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-white/15">
+                <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-rose-200/15">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-amber-300">✨ Wish Unlocked ✨</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-rose-300">❤️ My Heart To Yours ❤️</span>
                         <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
-                            Happy Birthday, <span id="card-recipient" class="text-amber-200">Zainab</span>!
+                            Happy Birthday, <span id="card-recipient" class="text-rose-200">Zainab</span>!
                         </h2>
                     </div>
-                    <div class="text-3xl sm:text-4xl">🥂</div>
+                    <div class="text-3xl sm:text-4xl">💖</div>
                 </div>
 
                 <div class="relative z-10 my-6 min-h-[120px]">
-                    <p id="typewriter-message" class="text-slate-100 text-base sm:text-lg leading-relaxed whitespace-pre-line"></p>
+                    <p id="typewriter-message" class="text-rose-50 text-base sm:text-lg leading-relaxed whitespace-pre-line"></p>
                 </div>
 
                 <!-- Prominent Video Surprise Reveal CTA -->
-                <div id="surprise-cta-wrapper" class="relative z-10 my-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-500/15 border border-amber-300/35 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-500">
+                <div id="surprise-cta-wrapper" class="relative z-10 my-6 p-4 rounded-2xl bg-gradient-to-r from-rose-500/20 via-pink-500/15 to-amber-500/15 border border-rose-300/35 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-500">
                     <div class="text-center sm:text-left">
-                        <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-amber-300 mb-0.5">
+                        <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-rose-300 mb-0.5">
                             🔒 Secret Surprise Locked
                         </span>
-                        <p class="text-sm text-slate-200 font-medium">
-                            Enter the secret password to unlock your surprise video!
+                        <p class="text-sm text-rose-100 font-medium">
+                            Enter our secret password to unlock your birthday surprise video!
                         </p>
                     </div>
                     <button id="open-surprise-btn" class="btn-surprise w-full sm:w-auto px-6 py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shrink-0 cursor-pointer">
@@ -695,19 +705,19 @@
                     </button>
                 </div>
 
-                <div class="relative z-10 pt-5 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="relative z-10 pt-5 border-t border-rose-200/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <p class="text-xs text-slate-400 uppercase tracking-wider">With warmest wishes,</p>
-                        <p id="card-sender" class="font-script text-2xl sm:text-3xl text-amber-300 mt-0.5">
-                            Your Best Friend
+                        <p class="text-xs text-rose-200/70 uppercase tracking-wider">Forever & always yours,</p>
+                        <p id="card-sender" class="font-script text-2xl sm:text-3xl text-rose-300 mt-0.5">
+                            Your Love
                         </p>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2">
-                        <button id="launch-fireworks-btn" class="px-4 py-2.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/35 text-amber-200 text-xs font-semibold transition cursor-pointer">
-                            🎆 Launch Fireworks
+                        <button id="launch-fireworks-btn" class="px-4 py-2.5 rounded-xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/35 text-rose-200 text-xs font-semibold transition cursor-pointer">
+                            🎆 Sparkle Fireworks
                         </button>
-                        <button id="replay-cake-btn" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 text-xs font-semibold transition cursor-pointer">
+                        <button id="replay-cake-btn" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-rose-100 text-xs font-semibold transition cursor-pointer">
                             🎂 Relight Cake
                         </button>
                     </div>
@@ -715,39 +725,39 @@
             </div>
         </div>
 
-        <p class="text-center text-xs text-slate-300/80 mt-5">
-            💡 <strong>Tip:</strong> Tap anywhere in the night sky to launch fireworks, or pop the floating wish orbs!
+        <p class="text-center text-xs text-rose-200/80 mt-5">
+            💡 <strong>Tip:</strong> Tap anywhere in the background to burst hearts & fireworks, or pop the floating love notes!
         </p>
     </section>
 
     <!-- ======================================================================
          SECRET PASSWORD PROMPT MODAL
          ====================================================================== -->
-    <div id="password-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="password-modal-title">
-        <div id="password-card" class="modal-animate-in relative w-full max-w-sm rounded-3xl bg-slate-900/95 border border-amber-300/40 p-6 sm:p-7 shadow-[0_0_50px_rgba(251,191,36,0.22)] text-center">
-            <button id="close-password-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-rose-500/80 text-slate-200 hover:text-white flex items-center justify-center text-lg transition cursor-pointer" aria-label="Close password modal">
+    <div id="password-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="password-modal-title">
+        <div id="password-card" class="modal-animate-in relative w-full max-w-sm rounded-3xl bg-rose-950/95 border border-rose-300/40 p-6 sm:p-7 shadow-[0_0_50px_rgba(244,63,94,0.28)] text-center">
+            <button id="close-password-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-rose-500/80 text-rose-100 hover:text-white flex items-center justify-center text-lg transition cursor-pointer" aria-label="Close password modal">
                 &times;
             </button>
 
-            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-400/15 border border-amber-300/35 flex items-center justify-center text-2xl shadow-inner">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-rose-400/15 border border-rose-300/35 flex items-center justify-center text-2xl shadow-inner">
                 🔐
             </div>
 
-            <span class="block text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-1">VIP Access Required</span>
+            <span class="block text-[10px] font-bold uppercase tracking-widest text-rose-300 mb-1">For Your Eyes Only</span>
             <h3 id="password-modal-title" class="font-display text-2xl font-bold text-white mb-1.5">
                 Enter Secret Password
             </h3>
-            <p class="text-xs text-slate-300 mb-5">
-                Type the password to unlock your birthday surprise reel!
+            <p class="text-xs text-rose-100/80 mb-5">
+                Type the secret password to unlock your surprise video!
             </p>
 
             <form id="password-form" class="space-y-3">
                 <div class="relative">
-                    <input id="surprise-password-input" type="password" autocomplete="off" placeholder="Enter password..." class="w-full px-4 py-3 rounded-xl bg-slate-800/90 border border-white/20 text-center text-white font-semibold tracking-wider text-base focus:outline-none focus:border-amber-400 transition">
+                    <input id="surprise-password-input" type="password" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Enter password..." class="w-full px-4 py-3 rounded-xl bg-black/40 border border-rose-300/25 text-center text-white font-semibold tracking-wider focus:outline-none focus:border-rose-400 transition">
                 </div>
 
-                <p id="password-error-msg" class="hidden text-xs text-rose-400 font-medium">
-                    ❌ Incorrect password. Try again!
+                <p id="password-error-msg" class="hidden text-xs text-rose-300 font-medium">
+                    ❌ Incorrect password. Try again, my love!
                 </p>
 
                 <button type="submit" class="btn-surprise w-full py-3.5 rounded-xl text-white font-extrabold text-sm flex items-center justify-center gap-2 cursor-pointer">
@@ -759,52 +769,68 @@
     </div>
 
     <!-- ======================================================================
-         INSTAGRAM REEL (9:16) AUTO-PLAYING VIDEO SURPRISE POPUP MODAL
+         UNIVERSAL INSTAGRAM REEL (9:16) AUTO-PLAYING VIDEO MODAL
          ====================================================================== -->
-    <div id="video-surprise-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
-        <div class="modal-animate-in relative w-full max-w-[380px] rounded-[28px] bg-slate-900/95 border border-amber-300/40 shadow-[0_0_60px_rgba(251,191,36,0.28)] overflow-hidden flex flex-col">
+    <div id="video-surprise-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-5 bg-black/90 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+        <div class="modal-animate-in reel-modal-card relative rounded-[28px] bg-rose-950/95 border border-rose-300/40 shadow-[0_0_60px_rgba(244,63,94,0.35)] overflow-hidden flex flex-col">
             
             <!-- Modal Header -->
-            <div class="flex items-center justify-between px-4 py-3 border-b border-white/15 bg-gradient-to-r from-indigo-950/80 via-slate-900 to-rose-950/60">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-rose-200/15 bg-gradient-to-r from-rose-950 via-pink-950/80 to-rose-950 shrink-0">
                 <div class="flex items-center gap-2 min-w-0">
-                    <span class="text-xl shrink-0">🎬</span>
+                    <span class="text-xl shrink-0">💝</span>
                     <div class="truncate">
-                        <span class="block text-[9px] font-bold uppercase tracking-widest text-amber-300">Special Reel Reveal</span>
+                        <span class="block text-[9px] font-bold uppercase tracking-widest text-rose-300">Made With Love</span>
                         <h3 id="video-modal-title" class="font-display text-base font-bold text-white truncate">
-                            For <span id="video-recipient-name" class="text-amber-200">Zainab</span> ✨
+                            For My <span id="video-recipient-name" class="text-rose-200">Zainab</span> ❤️
                         </h3>
                     </div>
                 </div>
-                <button id="close-video-btn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-rose-500/80 text-slate-200 hover:text-white flex items-center justify-center text-lg transition shrink-0 cursor-pointer" aria-label="Close video surprise">
+                <button id="close-video-btn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-rose-500/80 text-rose-100 hover:text-white flex items-center justify-center text-lg transition shrink-0 cursor-pointer" aria-label="Close video surprise">
                     &times;
                 </button>
             </div>
 
             <!-- Vertical Instagram Reel 9:16 Video Player Container -->
-            <div class="reel-frame relative bg-black flex items-center justify-center mx-auto overflow-hidden" id="video-player-container">
-                <video id="native-reel-video" class="w-full h-full object-cover bg-black" preload="auto" playsinline controls></video>
+            <div class="reel-frame flex items-center justify-center mx-auto" id="video-player-container">
+                <!-- Cross-browser video tag with playsinline + webkit-playsinline for all iPhones -->
+                <video id="native-reel-video"
+                       class="w-full h-full object-cover bg-black"
+                       preload="auto"
+                       playsinline
+                       webkit-playsinline="true"
+                       controls
+                       controlsList="nodownload">
+                </video>
+
+                <!-- iOS Safari / Low-Power Mode One-Tap Unmute Pill (shown only if browser starts video muted) -->
+                <button id="ios-unmute-btn" class="hidden absolute top-3 right-3 z-20 px-3.5 py-2 rounded-full bg-rose-600/90 text-white text-xs font-bold shadow-lg flex items-center gap-1.5 animate-bounce cursor-pointer">
+                    <span>🔇</span>
+                    <span>Tap for Sound</span>
+                </button>
+
+                <!-- Iframe Container (Used only if a YouTube / Vimeo link is supplied) -->
                 <div id="iframe-reel-wrapper" class="hidden w-full h-full"></div>
             </div>
 
-            <!-- Fallback / Helper Banner -->
-            <div id="video-fallback-banner" class="hidden p-4 text-center bg-slate-900 border-t border-white/10">
-                <p class="text-amber-300 font-semibold text-xs mb-1">📹 Upload Your Reel for Instant Autoplay!</p>
-                <p class="text-slate-300 text-[11px] mx-auto mb-3 leading-relaxed">
-                    Upload <code class="px-1 py-0.5 rounded bg-slate-800 text-amber-200">surprise.mp4</code> to GitHub for instant autoplay, or preview a video file now:
+            <!-- Fallback / Helper Banner (Shown only if video file is missing or unsupported codec) -->
+            <div id="video-fallback-banner" class="hidden p-4 text-center bg-rose-950 border-t border-rose-200/15 shrink-0">
+                <p class="text-rose-200 font-semibold text-xs mb-1">📹 Video Could Not Auto-Load</p>
+                <p id="video-error-detail" class="text-rose-100/80 text-[11px] mx-auto mb-3 leading-relaxed">
+                    Ensure your video is uploaded to GitHub as <code class="px-1 py-0.5 rounded bg-black/40 text-rose-200">surprise.mp4</code> in H.264 MP4 format, or test a local file below:
                 </p>
-                <label class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 text-xs font-bold cursor-pointer transition">
-                    <span>📂 Preview Local Reel (.mp4 / .mov)</span>
-                    <input id="local-video-picker" type="file" accept="video/*" class="hidden">
+                <label class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/40 text-rose-100 text-xs font-bold cursor-pointer transition">
+                    <span>📂 Preview Local Video (.mp4 / .mov)</span>
+                    <input id="local-video-picker" type="file" accept="video/mp4,video/quicktime,video/*" class="hidden">
                 </label>
             </div>
 
             <!-- Modal Footer Caption -->
-            <div class="px-4 py-3 bg-slate-950/75 border-t border-white/10 flex items-center justify-between gap-2">
-                <p id="video-caption-text" class="text-xs text-slate-300 italic truncate">
-                    Made just for you! ❤️
+            <div class="px-4 py-2.5 bg-black/40 border-t border-rose-200/15 flex items-center justify-between gap-2 shrink-0">
+                <p id="video-caption-text" class="text-xs text-rose-100 italic truncate">
+                    I love you endlessly! ❤️
                 </p>
                 <button id="done-video-btn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition shrink-0 cursor-pointer">
-                    Done ✨
+                    Done ❤️
                 </button>
             </div>
         </div>
@@ -813,49 +839,49 @@
     <!-- ======================================================================
          CUSTOM LINK GENERATOR MODAL (SHAREABLE GITHUB PAGES URL BUILDER)
          ====================================================================== -->
-    <div id="builder-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-        <div class="bg-slate-900 border border-white/20 rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl relative">
-            <button id="close-builder-btn" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl leading-none cursor-pointer" aria-label="Close modal">
+    <div id="builder-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-rose-950 border border-rose-300/25 rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl relative">
+            <button id="close-builder-btn" class="absolute top-5 right-5 text-rose-200/70 hover:text-white text-xl leading-none cursor-pointer" aria-label="Close modal">
                 &times;
             </button>
 
             <h3 class="font-display text-2xl font-bold text-white mb-1">Create a Custom Link 🔗</h3>
-            <p class="text-xs text-slate-400 mb-5">
-                Personalize this card for anyone and generate a ready-to-share URL—no code editing required!
+            <p class="text-xs text-rose-200/75 mb-5">
+                Personalize this love letter and generate a ready-to-share URL—no code editing required!
             </p>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Recipient's Name</label>
-                    <input id="input-name" type="text" placeholder="e.g., Sarah" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                    <label class="block text-xs font-semibold text-rose-100 mb-1">Recipient's Name</label>
+                    <input id="input-name" type="text" placeholder="e.g., Zainab" class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name (From)</label>
-                    <input id="input-from" type="text" placeholder="e.g., Mike" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                    <label class="block text-xs font-semibold text-rose-100 mb-1">Your Name (From)</label>
+                    <input id="input-from" type="text" placeholder="e.g., Saaif" class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Birthday Message</label>
-                    <textarea id="input-msg" rows="3" placeholder="Write your heartfelt birthday wish..." class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400"></textarea>
+                    <label class="block text-xs font-semibold text-rose-100 mb-1">Birthday Love Message</label>
+                    <textarea id="input-msg" rows="3" placeholder="Write your heartfelt birthday love letter..." class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">
-                        Surprise Video URL <span class="text-slate-400 font-normal">(Direct .mp4, Dropbox ?raw=1, or YouTube)</span>
+                    <label class="block text-xs font-semibold text-rose-100 mb-1">
+                        Surprise Video URL <span class="text-rose-200/60 font-normal">(Direct .mp4, Dropbox ?raw=1, or YouTube)</span>
                     </label>
-                    <input id="input-video" type="text" placeholder="e.g., surprise.mp4" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                    <input id="input-video" type="text" placeholder="e.g., surprise.mp4" class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400">
                 </div>
 
                 <div class="pt-2">
-                    <button id="copy-link-btn" class="btn-celestial w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
+                    <button id="copy-link-btn" class="btn-romance w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
                         <span>📋</span>
                         <span id="copy-btn-text">Generate & Copy Shareable Link</span>
                     </button>
                 </div>
 
                 <div id="generated-url-box" class="hidden">
-                    <input id="generated-url-input" type="text" readonly class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-amber-400/30 text-amber-200 text-xs font-mono">
+                    <input id="generated-url-input" type="text" readonly class="w-full px-3 py-2 rounded-lg bg-black/50 border border-rose-400/30 text-rose-200 text-xs font-mono">
                 </div>
             </div>
         </div>
@@ -867,23 +893,25 @@
            ========================================================================== */
         const CONFIG = {
             recipientName: "Zainab",
-            senderName: "Your Best Friend",
-            message: "Wishing you a year as bright, bold, and extraordinary as the stars above.\n\nMay every adventure bring you joy, every challenge turn into triumph, and every wish you made tonight come true. Happy Birthday!",
+            senderName: "Your Love",
+            message: "To the one who makes every single day brighter just by being in my life.\n\nMay this new year bring you endless happiness, gentle moments, and every dream your heart holds. Happy Birthday, my love—I am so grateful for you today and always!",
             surprisePassword: "saaif", // 🔒 Secret password for the surprise button
-            videoUrl: "surprise.mp4",
-            videoCaption: "Made just for you! ❤️",
+            // Checks surprise.mp4 first, and automatically falls back to suprise.mp4 if needed
+            videoCandidates: ["surprise.mp4", "suprise.mp4"],
+            videoUrl: "", // Optional: override with an external direct .mp4, Dropbox ?raw=1, or YouTube link
+            videoCaption: "I love you endlessly! ❤️",
             wishOrbs: [
-                "✨ Endless Joy",
-                "🚀 Bold Adventures",
-                "💖 Deep Love",
-                "🌟 Dream Big",
-                "🍀 Pure Luck",
-                "🥂 Unforgettable Memories"
+                "❤️ Forever Yours",
+                "🌹 Endless Love",
+                "✨ Pure Happiness",
+                "💑 Together Always",
+                "💖 My Favorite Person",
+                "🥂 Cherished Memories"
             ],
             colors: {
-                bgDeep: "#050816",
-                bgNebula1: "#1e1b4b",
-                bgNebula2: "#3b0764",
+                bgDeep: "#14050d",
+                bgGlow1: "#4c0519",
+                bgGlow2: "#581c87",
                 primaryAccent: "#f43f5e",
                 goldAccent: "#fbbf24"
             }
@@ -898,6 +926,10 @@
             sender: (urlParams.get("from") || CONFIG.senderName).trim(),
             message: (urlParams.get("msg") || CONFIG.message).trim(),
             videoUrl: (urlParams.get("video") || CONFIG.videoUrl).trim(),
+            resolvedVideoSrc: "",
+            videoReady: false,
+            videoLoadFailed: false,
+            iosAudioUnlocked: false,
             candlesRemaining: 3,
             musicPlaying: false,
             wasMusicPlayingBeforeVideo: false,
@@ -908,7 +940,7 @@
         };
 
         function applyPersonalization() {
-            document.title = `Happy Birthday, ${state.recipient}! ✨`;
+            document.title = `Happy Birthday, My Love ${state.recipient} ❤️`;
             document.getElementById("env-recipient").textContent = state.recipient;
             document.getElementById("cake-recipient").textContent = state.recipient;
             document.getElementById("card-recipient").textContent = state.recipient;
@@ -919,17 +951,17 @@
             document.getElementById("input-name").value = state.recipient;
             document.getElementById("input-from").value = state.sender;
             document.getElementById("input-msg").value = state.message;
-            document.getElementById("input-video").value = state.videoUrl;
+            document.getElementById("input-video").value = state.videoUrl || CONFIG.videoCandidates[0];
 
             const root = document.documentElement;
             root.style.setProperty("--bg-deep", CONFIG.colors.bgDeep);
-            root.style.setProperty("--bg-nebula-1", CONFIG.colors.bgNebula1);
-            root.style.setProperty("--bg-nebula-2", CONFIG.colors.bgNebula2);
+            root.style.setProperty("--bg-glow-1", CONFIG.colors.bgGlow1);
+            root.style.setProperty("--bg-glow-2", CONFIG.colors.bgGlow2);
             root.style.setProperty("--accent-primary", CONFIG.colors.primaryAccent);
             root.style.setProperty("--accent-gold", CONFIG.colors.goldAccent);
 
-            // Preload video immediately so it plays with zero buffering delay when unlocked
-            preloadVideoSource(state.videoUrl);
+            // Detect and preload working video file automatically across all browsers
+            resolveAndPreloadVideo();
         }
 
         /* ==========================================================================
@@ -949,6 +981,7 @@
         }
 
         waxSealBtn.addEventListener("click", () => {
+            unlockAudioForIOS();
             envelopeEl.classList.add("opened");
             playSparkleChime();
             setTimeout(() => {
@@ -999,6 +1032,7 @@
         }
 
         function blowAllCandlesImmediately() {
+            unlockAudioForIOS();
             while (state.candlesRemaining > 0) {
                 extinguishNextCandle();
             }
@@ -1006,10 +1040,16 @@
 
         tapBlowBtn.addEventListener("click", blowAllCandlesImmediately);
         cakeEl.addEventListener("click", () => {
+            unlockAudioForIOS();
             if (state.candlesRemaining > 0) extinguishNextCandle();
         });
 
         enableMicBtn.addEventListener("click", async () => {
+            unlockAudioForIOS();
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                micStatusMsg.textContent = "Microphone not supported in this browser—tap the candles or button to blow them out!";
+                return;
+            }
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 state.micStream = stream;
@@ -1103,14 +1143,14 @@
                     clearInterval(interval);
                     const ctaBox = document.getElementById("surprise-cta-wrapper");
                     if (ctaBox) {
-                        ctaBox.classList.add("ring-2", "ring-amber-300/60", "shadow-lg");
+                        ctaBox.classList.add("ring-2", "ring-rose-300/60", "shadow-lg");
                     }
                 }
             }, 26);
         }
 
         /* ==========================================================================
-           4B. PASSWORD GATE & INSTANT AUTO-PLAYING REEL VIDEO SURPRISE MODAL
+           4B. UNIVERSAL VIDEO RESOLVER, iOS SAFARI UNLOCKER & PASSWORD GATE
            ========================================================================== */
         const passwordModal = document.getElementById("password-modal");
         const passwordCard = document.getElementById("password-card");
@@ -1121,50 +1161,14 @@
 
         const videoModal = document.getElementById("video-surprise-modal");
         const nativeVideo = document.getElementById("native-reel-video");
+        const iosUnmuteBtn = document.getElementById("ios-unmute-btn");
         const iframeWrapper = document.getElementById("iframe-reel-wrapper");
         const videoFallbackBanner = document.getElementById("video-fallback-banner");
+        const videoErrorDetail = document.getElementById("video-error-detail");
         const openSurpriseBtn = document.getElementById("open-surprise-btn");
         const closeVideoBtn = document.getElementById("close-video-btn");
         const doneVideoBtn = document.getElementById("done-video-btn");
         const localVideoPicker = document.getElementById("local-video-picker");
-
-        let videoLoadFailed = false;
-
-        function openPasswordPrompt() {
-            passwordErrorMsg.classList.add("hidden");
-            passwordInput.value = "";
-            passwordModal.classList.remove("hidden");
-            passwordModal.classList.add("flex");
-            setTimeout(() => passwordInput.focus(), 100);
-        }
-
-        function closePasswordPrompt() {
-            passwordModal.classList.add("hidden");
-            passwordModal.classList.remove("flex");
-        }
-
-        openSurpriseBtn.addEventListener("click", openPasswordPrompt);
-        closePasswordBtn.addEventListener("click", closePasswordPrompt);
-        passwordModal.addEventListener("click", (e) => {
-            if (e.target === passwordModal) closePasswordPrompt();
-        });
-
-        passwordForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const entered = passwordInput.value.trim().toLowerCase();
-            const expected = CONFIG.surprisePassword.trim().toLowerCase();
-
-            if (entered === expected) {
-                closePasswordPrompt();
-                openVideoSurprise();
-            } else {
-                passwordErrorMsg.classList.remove("hidden");
-                passwordCard.classList.remove("shake-error");
-                void passwordCard.offsetWidth;
-                passwordCard.classList.add("shake-error");
-                passwordInput.select();
-            }
-        });
 
         function parseVideoEmbed(url) {
             if (!url) return { type: "none" };
@@ -1204,29 +1208,123 @@
             };
         }
 
-        function preloadVideoSource(url) {
-            videoLoadFailed = false;
-            const parsed = parseVideoEmbed(url);
+        // Automatically checks surprise.mp4 -> suprise.mp4 (and handles GitHub Pages paths)
+        async function resolveAndPreloadVideo() {
+            state.videoLoadFailed = false;
+            state.videoReady = false;
 
-            if (parsed.type === "video") {
-                nativeVideo.classList.remove("hidden");
-                iframeWrapper.classList.add("hidden");
-                iframeWrapper.innerHTML = "";
-                nativeVideo.src = parsed.src;
-                nativeVideo.load();
-            } else if (parsed.type === "iframe") {
-                nativeVideo.classList.add("hidden");
-                nativeVideo.removeAttribute("src");
-                iframeWrapper.classList.remove("hidden");
-            } else {
-                videoLoadFailed = true;
+            if (state.videoUrl) {
+                const parsed = parseVideoEmbed(state.videoUrl);
+                if (parsed.type === "iframe") {
+                    state.resolvedVideoSrc = parsed.src;
+                    state.videoReady = true;
+                    nativeVideo.classList.add("hidden");
+                    iframeWrapper.classList.remove("hidden");
+                    return;
+                }
+                loadNativeVideoCandidate(parsed.src, []);
+                return;
             }
+
+            const cacheBust = `?v=${Date.now()}`;
+            const candidates = CONFIG.videoCandidates.map(name => `${name}${cacheBust}`);
+            loadNativeVideoCandidate(candidates[0], candidates.slice(1));
         }
 
-        nativeVideo.addEventListener("error", () => {
-            videoLoadFailed = true;
-            if (!videoModal.classList.contains("hidden")) {
-                videoFallbackBanner.classList.remove("hidden");
+        function loadNativeVideoCandidate(currentSrc, remainingCandidates) {
+            nativeVideo.classList.remove("hidden");
+            iframeWrapper.classList.add("hidden");
+            iframeWrapper.innerHTML = "";
+
+            const onLoaded = () => {
+                cleanup();
+                state.resolvedVideoSrc = currentSrc;
+                state.videoReady = true;
+                state.videoLoadFailed = false;
+            };
+
+            const onError = () => {
+                cleanup();
+                if (remainingCandidates.length > 0) {
+                    loadNativeVideoCandidate(remainingCandidates[0], remainingCandidates.slice(1));
+                } else {
+                    state.videoLoadFailed = true;
+                    state.videoReady = false;
+                    if (!videoModal.classList.contains("hidden")) {
+                        videoFallbackBanner.classList.remove("hidden");
+                    }
+                }
+            };
+
+            function cleanup() {
+                nativeVideo.removeEventListener("loadedmetadata", onLoaded);
+                nativeVideo.removeEventListener("canplay", onLoaded);
+                nativeVideo.removeEventListener("error", onError);
+            }
+
+            nativeVideo.addEventListener("loadedmetadata", onLoaded);
+            nativeVideo.addEventListener("canplay", onLoaded);
+            nativeVideo.addEventListener("error", onError);
+
+            nativeVideo.src = currentSrc;
+            nativeVideo.load();
+        }
+
+        // Critical iOS Safari & iOS Chrome fix:
+        // Unlocks the <video> element inside the initial user tap so it can auto-play after password submit
+        function primeVideoElementOnUserTap() {
+            if (state.iosAudioUnlocked || state.videoLoadFailed) return;
+            const parsed = parseVideoEmbed(state.videoUrl);
+            if (parsed.type === "iframe") return;
+
+            try {
+                nativeVideo.muted = true;
+                const p = nativeVideo.play();
+                if (p && typeof p.then === "function") {
+                    p.then(() => {
+                        nativeVideo.pause();
+                        nativeVideo.currentTime = 0;
+                        nativeVideo.muted = false;
+                        state.iosAudioUnlocked = true;
+                    }).catch(() => {});
+                }
+            } catch (e) {}
+        }
+
+        function openPasswordPrompt() {
+            primeVideoElementOnUserTap();
+            passwordErrorMsg.classList.add("hidden");
+            passwordInput.value = "";
+            passwordModal.classList.remove("hidden");
+            passwordModal.classList.add("flex");
+            setTimeout(() => passwordInput.focus(), 120);
+        }
+
+        function closePasswordPrompt() {
+            passwordModal.classList.add("hidden");
+            passwordModal.classList.remove("flex");
+        }
+
+        openSurpriseBtn.addEventListener("click", openPasswordPrompt);
+        closePasswordBtn.addEventListener("click", closePasswordPrompt);
+        passwordModal.addEventListener("click", (e) => {
+            if (e.target === passwordModal) closePasswordPrompt();
+        });
+
+        passwordForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const entered = passwordInput.value.trim().toLowerCase();
+            const expected = CONFIG.surprisePassword.trim().toLowerCase();
+
+            if (entered === expected) {
+                closePasswordPrompt();
+                openVideoSurprise();
+            } else {
+                passwordErrorMsg.classList.remove("hidden");
+                passwordCard.classList.remove("shake-error");
+                void passwordCard.offsetWidth;
+                passwordCard.classList.add("shake-error");
+                passwordInput.select();
             }
         });
 
@@ -1240,47 +1338,65 @@
             triggerConfettiBurst();
 
             videoFallbackBanner.classList.add("hidden");
+            iosUnmuteBtn.classList.add("hidden");
+
             const parsed = parseVideoEmbed(state.videoUrl);
 
             videoModal.classList.remove("hidden");
             videoModal.classList.add("flex");
 
-            if (parsed.type === "video") {
-                nativeVideo.classList.remove("hidden");
-                iframeWrapper.classList.add("hidden");
-
-                if (videoLoadFailed) {
-                    videoFallbackBanner.classList.remove("hidden");
-                    return;
-                }
-
-                nativeVideo.currentTime = 0;
-                nativeVideo.muted = false;
-
-                const playPromise = nativeVideo.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        nativeVideo.muted = true;
-                        nativeVideo.play().then(() => {
-                            nativeVideo.muted = false;
-                        }).catch(() => {});
-                    });
-                }
-            } else if (parsed.type === "iframe") {
+            if (parsed.type === "iframe") {
                 nativeVideo.classList.add("hidden");
                 iframeWrapper.classList.remove("hidden");
                 iframeWrapper.innerHTML = `<iframe src="${parsed.src}" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-            } else {
+                return;
+            }
+
+            nativeVideo.classList.remove("hidden");
+            iframeWrapper.classList.add("hidden");
+
+            if (state.videoLoadFailed) {
                 videoFallbackBanner.classList.remove("hidden");
+                return;
+            }
+
+            try {
+                nativeVideo.currentTime = 0;
+            } catch (e) {}
+
+            nativeVideo.muted = false;
+            const playPromise = nativeVideo.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Fallback for iPhone Low Power Mode or strict Safari policies:
+                    // Start muted immediately (always allowed on iOS) and show one-tap sound button
+                    nativeVideo.muted = true;
+                    nativeVideo.play().then(() => {
+                        iosUnmuteBtn.classList.remove("hidden");
+                    }).catch(() => {
+                        videoFallbackBanner.classList.remove("hidden");
+                    });
+                });
             }
         }
+
+        iosUnmuteBtn.addEventListener("click", () => {
+            nativeVideo.muted = false;
+            nativeVideo.volume = 1.0;
+            nativeVideo.play();
+            iosUnmuteBtn.classList.add("hidden");
+        });
 
         function closeVideoSurprise() {
             videoModal.classList.add("hidden");
             videoModal.classList.remove("flex");
+            iosUnmuteBtn.classList.add("hidden");
 
             nativeVideo.pause();
-            nativeVideo.currentTime = 0;
+            try {
+                nativeVideo.currentTime = 0;
+            } catch (e) {}
             iframeWrapper.innerHTML = "";
 
             if (state.wasMusicPlayingBeforeVideo) {
@@ -1306,33 +1422,35 @@
             if (!file) return;
             const objectUrl = URL.createObjectURL(file);
             state.videoUrl = objectUrl;
-            videoLoadFailed = false;
+            state.videoLoadFailed = false;
             videoFallbackBanner.classList.add("hidden");
             nativeVideo.classList.remove("hidden");
             iframeWrapper.classList.add("hidden");
             nativeVideo.src = objectUrl;
+            nativeVideo.muted = false;
             nativeVideo.play();
         });
 
-        // 3D Holographic Card Tilt Physics
+        // 3D Holographic Card Tilt Physics (Desktop hover + Mobile touch support)
         const holoCard = document.getElementById("holo-card");
         const holoGlare = document.getElementById("holo-glare");
 
-        holoCard.addEventListener("mousemove", (e) => {
+        function updateCardTilt(clientX, clientY) {
             const rect = holoCard.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const rotateX = ((y - centerY) / centerY) * -7;
-            const rotateY = ((x - centerX) / centerX) * 7;
+            const rotateX = ((y - centerY) / centerY) * -6;
+            const rotateY = ((x - centerX) / centerX) * 6;
 
             holoCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             holoGlare.style.setProperty("--glare-x", `${(x / rect.width) * 100}%`);
             holoGlare.style.setProperty("--glare-y", `${(y / rect.height) * 100}%`);
-        });
+        }
 
+        holoCard.addEventListener("mousemove", (e) => updateCardTilt(e.clientX, e.clientY));
         holoCard.addEventListener("mouseleave", () => {
             holoCard.style.transform = "rotateX(0deg) rotateY(0deg)";
         });
@@ -1358,7 +1476,7 @@
         });
 
         /* ==========================================================================
-           5. POPPABLE FLOATING WISH ORBS
+           5. POPPABLE FLOATING LOVE NOTES
            ========================================================================== */
         function spawnWishOrbs() {
             const container = document.getElementById("wish-orbs-layer");
@@ -1367,24 +1485,24 @@
             CONFIG.wishOrbs.forEach((wishText, i) => {
                 const orb = document.createElement("button");
                 orb.className = "wish-orb";
-                orb.innerHTML = `<span>✨</span><span>Wish #${i + 1}</span>`;
+                orb.innerHTML = `<span>💖</span><span>Love Note #${i + 1}</span>`;
 
                 const isLeft = i % 2 === 0;
-                const xPos = isLeft ? (4 + Math.random() * 14) : (74 + Math.random() * 14);
-                const yPos = 15 + (i * 12) % 70;
+                const xPos = isLeft ? (3 + Math.random() * 10) : (68 + Math.random() * 12);
+                const yPos = 14 + (i * 12) % 68;
 
                 orb.style.left = `${xPos}%`;
                 orb.style.top = `${yPos}%`;
                 orb.style.setProperty("--drift-duration", `${12 + Math.random() * 8}s`);
-                orb.style.setProperty("--dx", `${(Math.random() - 0.5) * 40}px`);
-                orb.style.setProperty("--dy", `${(Math.random() - 0.5) * 40}px`);
+                orb.style.setProperty("--dx", `${(Math.random() - 0.5) * 30}px`);
+                orb.style.setProperty("--dy", `${(Math.random() - 0.5) * 30}px`);
 
                 orb.addEventListener("click", (e) => {
                     playSparkleChime();
                     launchFirework(e.clientX, e.clientY);
 
                     const toast = document.createElement("div");
-                    toast.className = "wish-toast px-4 py-2 rounded-full bg-amber-400 text-slate-950 font-bold text-sm shadow-xl";
+                    toast.className = "wish-toast px-4 py-2 rounded-full bg-rose-500 text-white font-bold text-sm shadow-xl";
                     toast.textContent = wishText;
                     toast.style.left = `${e.clientX}px`;
                     toast.style.top = `${e.clientY}px`;
@@ -1401,12 +1519,22 @@
         }
 
         /* ==========================================================================
-           6. WEB AUDIO API: SYNTHESIZED MUSIC BOX & CHIMES
+           6. WEB AUDIO API: iOS-SAFE SYNTHESIZED MUSIC BOX & CHIMES
            ========================================================================== */
-        function playSparkleChime() {
+        function unlockAudioForIOS() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioCtx();
+                if (!state.audioCtx) state.audioCtx = new AudioCtx();
+                if (state.audioCtx.state === "suspended") {
+                    state.audioCtx.resume();
+                }
+            } catch (e) {}
+        }
+
+        function playSparkleChime() {
+            try {
+                unlockAudioForIOS();
+                const ctx = state.audioCtx;
                 [587.33, 880, 1174.66].forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
@@ -1429,9 +1557,7 @@
             updateMusicButtonUI();
 
             try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (!state.audioCtx) state.audioCtx = new AudioCtx();
-                if (state.audioCtx.state === "suspended") state.audioCtx.resume();
+                unlockAudioForIOS();
 
                 const melody = [
                     [261.63, 0.75], [261.63, 0.25], [293.66, 1], [261.63, 1], [349.23, 1], [329.63, 2],
@@ -1495,40 +1621,59 @@
                 particleCount: 95,
                 spread: 80,
                 origin: { y: 0.6 },
-                colors: [CONFIG.colors.primaryAccent, CONFIG.colors.goldAccent, "#38bdf8", "#a855f7", "#ffffff"]
+                colors: [CONFIG.colors.primaryAccent, "#fda4af", "#fb7185", CONFIG.colors.goldAccent, "#ffffff"]
             });
         }
 
         /* ==========================================================================
-           7. HTML5 CANVAS: TWINKLING STARFIELD & INTERACTIVE FIREWORKS
+           7. HTML5 CANVAS: FLOATING GLOWING HEARTS & INTERACTIVE FIREWORKS
            ========================================================================== */
-        const canvas = document.getElementById("cosmos-canvas");
+        const canvas = document.getElementById("romance-canvas");
         const ctx = canvas.getContext("2d");
-        let stars = [];
+        let floatingHearts = [];
         let particles = [];
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            initStars();
+            initFloatingHearts();
         }
 
-        function initStars() {
-            stars = [];
-            const count = Math.floor((canvas.width * canvas.height) / 9000);
+        function initFloatingHearts() {
+            floatingHearts = [];
+            const count = Math.floor((canvas.width * canvas.height) / 18000);
+            const heartColors = ["rgba(244, 63, 94,", "rgba(251, 113, 133,", "rgba(253, 164, 175,", "rgba(251, 191, 36,"];
             for (let i = 0; i < count; i++) {
-                stars.push({
+                floatingHearts.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    radius: Math.random() * 1.6 + 0.4,
-                    alpha: Math.random(),
-                    delta: (Math.random() * 0.015 + 0.005) * (Math.random() < 0.5 ? 1 : -1)
+                    size: Math.random() * 8 + 5,
+                    speedY: Math.random() * 0.45 + 0.15,
+                    swayOffset: Math.random() * Math.PI * 2,
+                    alpha: Math.random() * 0.45 + 0.15,
+                    colorPrefix: heartColors[Math.floor(Math.random() * heartColors.length)]
                 });
             }
         }
 
+        function drawHeart(x, y, size, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.beginPath();
+            const topCurveHeight = size * 0.3;
+            ctx.moveTo(0, topCurveHeight);
+            ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+            ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, (size + topCurveHeight) / 1.4, 0, size);
+            ctx.bezierCurveTo(0, (size + topCurveHeight) / 1.4, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+            ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.restore();
+        }
+
         function launchFirework(x, y) {
-            const palette = ["#fbbf24", "#f43f5e", "#38bdf8", "#c084fc", "#34d399", "#ffffff"];
+            const palette = ["#f43f5e", "#fb7185", "#fda4af", "#fbbf24", "#f472b6", "#ffffff"];
             const color = palette[Math.floor(Math.random() * palette.length)];
             const count = 48;
 
@@ -1551,16 +1696,22 @@
             launchFirework(e.clientX, e.clientY);
         });
 
-        function animateCosmos() {
+        let frameTick = 0;
+        function animateRomanceCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            frameTick += 0.015;
 
-            for (const s of stars) {
-                s.alpha += s.delta;
-                if (s.alpha <= 0.15 || s.alpha >= 1) s.delta *= -1;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
-                ctx.fill();
+            for (const h of floatingHearts) {
+                h.y -= h.speedY;
+                const swayX = Math.sin(frameTick + h.swayOffset) * 0.35;
+                h.x += swayX;
+
+                if (h.y < -20) {
+                    h.y = canvas.height + 20;
+                    h.x = Math.random() * canvas.width;
+                }
+
+                drawHeart(h.x, h.y, h.size, `${h.colorPrefix} ${h.alpha})`);
             }
 
             for (let i = particles.length - 1; i >= 0; i--) {
@@ -1595,7 +1746,7 @@
                 );
             }
 
-            requestAnimationFrame(animateCosmos);
+            requestAnimationFrame(animateRomanceCanvas);
         }
 
         /* ==========================================================================
@@ -1631,7 +1782,7 @@
                 from: fromVal,
                 msg: msgVal
             });
-            if (videoVal && videoVal !== CONFIG.videoUrl) {
+            if (videoVal && !CONFIG.videoCandidates.includes(videoVal)) {
                 params.set("video", videoVal);
             }
             const shareUrl = `${baseUrl}?${params.toString()}`;
@@ -1639,7 +1790,11 @@
             generatedUrlInput.value = shareUrl;
             generatedUrlBox.classList.remove("hidden");
             generatedUrlInput.select();
-            document.execCommand("copy");
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).catch(() => document.execCommand("copy"));
+            } else {
+                document.execCommand("copy");
+            }
 
             copyBtnText.textContent = "Copied to Clipboard! ✓";
             setTimeout(() => {
@@ -1654,7 +1809,7 @@
         window.onload = () => {
             applyPersonalization();
             resizeCanvas();
-            animateCosmos();
+            animateRomanceCanvas();
         };
     </script>
 </body>
