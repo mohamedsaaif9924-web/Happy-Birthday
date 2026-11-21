@@ -168,12 +168,15 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s, z-index 0.1s 0.4s;
             z-index: 1;
         }
 
         .envelope.opened .envelope-letter-peek {
             transform: translateY(-86px);
+            z-index: 6;
+            cursor: pointer;
         }
 
         .envelope-pocket {
@@ -608,13 +611,13 @@
         <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
             For My Love, <span id="env-recipient" class="text-rose-300">Zainab</span>
         </h1>
-        <p class="text-rose-100/80 text-sm mb-7">
+        <p id="env-subtitle" class="text-rose-100/80 text-sm mb-12 transition-opacity duration-500">
             Tap the heart seal to open your birthday letter.
         </p>
 
         <div class="envelope-wrapper">
             <div id="envelope" class="envelope">
-                <div class="envelope-letter-peek">
+                <div id="envelope-letter-card" class="envelope-letter-peek">
                     <span class="text-xs uppercase tracking-widest text-rose-700 font-bold mb-1">With All My Heart</span>
                     <p class="font-display text-xl font-extrabold text-rose-950">Make a Wish, My Love! 🎂</p>
                 </div>
@@ -628,7 +631,7 @@
             </div>
         </div>
 
-        <p class="text-xs text-rose-200/75 mt-7 animate-pulse">
+        <p id="env-hint" class="text-xs text-rose-200/75 mt-7 animate-pulse">
             ♥ Tap the crimson heart seal ♥
         </p>
     </section>
@@ -947,13 +950,18 @@
         }
 
         /* ==========================================================================
-           2. UNIFIED STAGE NAVIGATION (ZERO SCROLL JUMP)
+           2. UNIFIED STAGE NAVIGATION (ZERO SCROLL JUMP + INVITATION PAUSE)
            ========================================================================== */
         const stageEnvelope = document.getElementById("stage-envelope");
         const stageCake = document.getElementById("stage-cake");
         const stageCelebration = document.getElementById("stage-celebration");
         const envelopeEl = document.getElementById("envelope");
         const waxSealBtn = document.getElementById("wax-seal-btn");
+        const envelopeLetterCard = document.getElementById("envelope-letter-card");
+        const envHint = document.getElementById("env-hint");
+
+        let envelopeOpened = false;
+        let envelopeTransitionTimer = null;
 
         function switchStage(fromEl, toEl, allowScroll = false) {
             fromEl.classList.add("stage-fading-out");
@@ -974,13 +982,33 @@
             }, 450);
         }
 
+        function proceedToCakeStage() {
+            if (envelopeTransitionTimer) {
+                clearTimeout(envelopeTransitionTimer);
+                envelopeTransitionTimer = null;
+            }
+            switchStage(stageEnvelope, stageCake, false);
+        }
+
         waxSealBtn.addEventListener("click", () => {
+            if (envelopeOpened) return;
+            envelopeOpened = true;
             unlockAudioForIOS();
             envelopeEl.classList.add("opened");
             playSparkleChime();
-            setTimeout(() => {
-                switchStage(stageEnvelope, stageCake, false);
-            }, 1100);
+            envHint.textContent = "✨ Tap the card to continue to your cake ✨";
+
+            // Keep the popped-out invitation visible for 3.6 seconds so she can enjoy it
+            envelopeTransitionTimer = setTimeout(() => {
+                proceedToCakeStage();
+            }, 3600);
+        });
+
+        // Also allow tapping the popped-out invitation card to advance anytime
+        envelopeLetterCard.addEventListener("click", () => {
+            if (envelopeOpened) {
+                proceedToCakeStage();
+            }
         });
 
         /* ==========================================================================
