@@ -105,7 +105,6 @@
             transform: translateY(-6px) rotateX(4deg);
         }
 
-        /* Envelope Inner Glow Card Peek */
         .envelope-letter-peek {
             position: absolute;
             inset: 14px;
@@ -125,7 +124,6 @@
             transform: translateY(-95px);
         }
 
-        /* Envelope Bottom & Side Flaps */
         .envelope-pocket {
             position: absolute;
             inset: 0;
@@ -155,7 +153,6 @@
             clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
         }
 
-        /* Top Triangular Flap */
         .envelope-flap {
             position: absolute;
             top: 0;
@@ -175,7 +172,6 @@
             z-index: 0;
         }
 
-        /* Gold Wax Seal Button */
         .wax-seal {
             position: absolute;
             top: 52%;
@@ -394,7 +390,6 @@
             overflow: hidden;
         }
 
-        /* Dynamic Holographic Shimmer Overlay */
         .holo-glare {
             position: absolute;
             inset: 0;
@@ -443,7 +438,6 @@
             100% { transform: translate(calc(var(--dx, 25px) * -0.7), calc(var(--dy, -30px) * 0.8)); }
         }
 
-        /* Floating Toast for Popped Wishes */
         .wish-toast {
             position: fixed;
             z-index: 50;
@@ -459,7 +453,6 @@
             100% { opacity: 0; transform: translate(-50%, -115%) scale(0.95); }
         }
 
-        /* Glowing Primary Button */
         .btn-celestial {
             background: linear-gradient(135deg, var(--accent-primary), #e11d48);
             box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.55);
@@ -471,7 +464,6 @@
             box-shadow: 0 15px 32px -5px rgba(244, 63, 94, 0.8);
         }
 
-        /* Shimmering Golden-Rose Surprise Gift Button */
         .btn-surprise {
             position: relative;
             overflow: hidden;
@@ -517,14 +509,20 @@
             45%, 100% { left: 135%; }
         }
 
-        /* Cinematic Video Modal Entrance */
         @keyframes modalPopIn {
-            0% { opacity: 0; transform: scale(0.9) translateY(18px); }
+            0% { opacity: 0; transform: scale(0.92) translateY(16px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .modal-animate-in {
-            animation: modalPopIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: modalPopIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* Instagram Reel 9:16 Vertical Frame Sizing */
+        .reel-frame {
+            aspect-ratio: 9 / 16;
+            max-height: 72vh;
+            width: 100%;
         }
     </style>
 </head>
@@ -536,7 +534,7 @@
     <!-- Floating Poppable Wish Orbs Layer (Activated in Stage 3) -->
     <div id="wish-orbs-layer"></div>
 
-    <!-- Top Floating Utility Bar (Audio Toggle & Custom Link Builder) -->
+    <!-- Top Floating Utility Bar -->
     <header class="fixed top-4 right-4 z-30 flex items-center gap-2">
         <button id="music-toggle-btn" class="hidden px-3.5 py-2 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-white/15 backdrop-blur-md text-xs font-semibold text-amber-200 flex items-center gap-1.5 transition cursor-pointer" title="Toggle Music Box">
             <span id="music-icon">🎵</span>
@@ -565,17 +563,14 @@
 
         <div class="envelope-wrapper">
             <div id="envelope" class="envelope">
-                <!-- Inner Card Peek -->
                 <div class="envelope-letter-peek">
                     <span class="text-xs uppercase tracking-widest text-amber-700 font-bold mb-1">Official Invitation</span>
                     <p class="font-display text-xl font-extrabold text-slate-900">Make a Wish! 🎂</p>
                 </div>
 
-                <!-- Envelope Flaps -->
                 <div class="envelope-pocket"></div>
                 <div class="envelope-flap"></div>
 
-                <!-- Interactive Wax Seal -->
                 <button id="wax-seal-btn" class="wax-seal" aria-label="Break wax seal to open birthday card">
                     <span class="font-display text-2xl font-extrabold text-amber-950">★</span>
                 </button>
@@ -604,7 +599,6 @@
                 Close your eyes, make a wish, and either <strong>blow into your microphone</strong> or tap the candles to extinguish them!
             </p>
 
-            <!-- Interactive Layered Cake -->
             <div class="my-6 select-none">
                 <div id="cake" class="cake-container" role="button" tabindex="0" aria-label="Tap to blow out candles">
                     <div class="candles-row">
@@ -627,7 +621,6 @@
                 </div>
             </div>
 
-            <!-- Microphone Blow Meter (Visible when Mic is enabled) -->
             <div id="mic-meter-container" class="hidden max-w-xs mx-auto mb-5">
                 <div class="flex items-center justify-between text-xs text-amber-200 mb-1.5">
                     <span>🎙️ Blow into your mic!</span>
@@ -638,7 +631,6 @@
                 </div>
             </div>
 
-            <!-- Action Controls -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
                 <button id="enable-mic-btn" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
                     <span>🎙️</span>
@@ -662,7 +654,6 @@
             <div id="holo-card" class="holo-card rounded-3xl p-6 sm:p-10 text-left">
                 <div class="holo-glare" id="holo-glare"></div>
 
-                <!-- Card Header -->
                 <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-white/15">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-amber-300">✨ Wish Unlocked ✨</span>
@@ -673,7 +664,6 @@
                     <div class="text-3xl sm:text-4xl">🥂</div>
                 </div>
 
-                <!-- Typewriter Heartfelt Message -->
                 <div class="relative z-10 my-6 min-h-[120px]">
                     <p id="typewriter-message" class="text-slate-100 text-base sm:text-lg leading-relaxed whitespace-pre-line"></p>
                 </div>
@@ -694,12 +684,11 @@
                     </button>
                 </div>
 
-                <!-- Signature Footer -->
                 <div class="relative z-10 pt-5 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <p class="text-xs text-slate-400 uppercase tracking-wider">With warmest wishes,</p>
                         <p id="card-sender" class="font-script text-2xl sm:text-3xl text-amber-300 mt-0.5">
-                            Your Husband
+                            Your Best Friend
                         </p>
                     </div>
 
@@ -721,51 +710,54 @@
     </section>
 
     <!-- ======================================================================
-         CINEMATIC VIDEO SURPRISE POPUP MODAL
+         INSTAGRAM REEL (9:16) AUTO-PLAYING VIDEO SURPRISE POPUP MODAL
          ====================================================================== -->
-    <div id="video-surprise-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
-        <div class="modal-animate-in relative w-full max-w-3xl rounded-3xl bg-slate-900/95 border border-amber-300/40 shadow-[0_0_60px_rgba(251,191,36,0.25)] overflow-hidden">
+    <div id="video-surprise-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+        <div class="modal-animate-in relative w-full max-w-[380px] rounded-[28px] bg-slate-900/95 border border-amber-300/40 shadow-[0_0_60px_rgba(251,191,36,0.28)] overflow-hidden flex flex-col">
             
             <!-- Modal Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-white/15 bg-gradient-to-r from-indigo-950/80 via-slate-900 to-rose-950/60">
-                <div class="flex items-center gap-2.5">
-                    <span class="text-2xl">🎬</span>
-                    <div>
-                        <span class="block text-[10px] font-bold uppercase tracking-widest text-amber-300">Special Birthday Reveal</span>
-                        <h3 id="video-modal-title" class="font-display text-lg sm:text-xl font-bold text-white">
-                            A Video Surprise For <span id="video-recipient-name" class="text-amber-200">Zainab</span>
+            <div class="flex items-center justify-between px-4 py-3 border-b border-white/15 bg-gradient-to-r from-indigo-950/80 via-slate-900 to-rose-950/60">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-xl shrink-0">🎬</span>
+                    <div class="truncate">
+                        <span class="block text-[9px] font-bold uppercase tracking-widest text-amber-300">Special Reel Reveal</span>
+                        <h3 id="video-modal-title" class="font-display text-base font-bold text-white truncate">
+                            For <span id="video-recipient-name" class="text-amber-200">Zainab</span> ✨
                         </h3>
                     </div>
                 </div>
-                <button id="close-video-btn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-500/80 text-slate-200 hover:text-white flex items-center justify-center text-xl transition cursor-pointer" aria-label="Close video surprise">
+                <button id="close-video-btn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-rose-500/80 text-slate-200 hover:text-white flex items-center justify-center text-lg transition shrink-0 cursor-pointer" aria-label="Close video surprise">
                     &times;
                 </button>
             </div>
 
-            <!-- Responsive 16:9 Video Player Container -->
-            <div class="relative w-full aspect-video bg-black flex items-center justify-center" id="video-player-container">
-                <!-- Video element or iframe is dynamically injected here -->
+            <!-- Vertical Instagram Reel 9:16 Video Player Container -->
+            <div class="reel-frame relative bg-black flex items-center justify-center mx-auto overflow-hidden" id="video-player-container">
+                <!-- Persistent Native Video Element for Instant Zero-Lag Autoplay -->
+                <video id="native-reel-video" class="w-full h-full object-cover bg-black" preload="auto" playsinline controls></video>
+                <!-- Iframe Container (Used only if a YouTube / Google Drive link is supplied) -->
+                <div id="iframe-reel-wrapper" class="hidden w-full h-full"></div>
             </div>
 
-            <!-- Fallback / Helper Banner (Shown if default surprise.mp4 is not uploaded yet) -->
-            <div id="video-fallback-banner" class="hidden p-6 text-center bg-slate-900 border-t border-white/10">
-                <p class="text-amber-300 font-semibold text-sm mb-1">📹 Ready for Your Video!</p>
-                <p class="text-slate-300 text-xs max-w-lg mx-auto mb-4 leading-relaxed">
-                    Upload a video named <code class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-200">surprise.mp4</code> into your GitHub repository, paste a YouTube / Google Drive link in <code class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-200">CONFIG.videoUrl</code>, or preview a video file right now from your device:
+            <!-- Fallback / Helper Banner -->
+            <div id="video-fallback-banner" class="hidden p-4 text-center bg-slate-900 border-t border-white/10">
+                <p class="text-amber-300 font-semibold text-xs mb-1">📹 Upload Your Reel for Instant Autoplay!</p>
+                <p class="text-slate-300 text-[11px] mx-auto mb-3 leading-relaxed">
+                    Upload <code class="px-1 py-0.5 rounded bg-slate-800 text-amber-200">surprise.mp4</code> to GitHub for instant autoplay, or preview a video file now:
                 </p>
-                <label class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 text-xs font-bold cursor-pointer transition">
-                    <span>📂 Preview Local Video File (.mp4 / .mov)</span>
+                <label class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/40 text-amber-200 text-xs font-bold cursor-pointer transition">
+                    <span>📂 Preview Local Reel (.mp4 / .mov)</span>
                     <input id="local-video-picker" type="file" accept="video/*" class="hidden">
                 </label>
             </div>
 
             <!-- Modal Footer Caption -->
-            <div class="px-6 py-4 bg-slate-950/60 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <p id="video-caption-text" class="text-xs sm:text-sm text-slate-300 italic">
-                    Press play for a special birthday surprise made just for you! ❤️
+            <div class="px-4 py-3 bg-slate-950/75 border-t border-white/10 flex items-center justify-between gap-2">
+                <p id="video-caption-text" class="text-xs text-slate-300 italic truncate">
+                    Made just for you! ❤️
                 </p>
-                <button id="done-video-btn" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition self-end sm:self-auto cursor-pointer">
-                    Back to Card ✨
+                <button id="done-video-btn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition shrink-0 cursor-pointer">
+                    Done ✨
                 </button>
             </div>
         </div>
@@ -803,9 +795,9 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">
-                        Surprise Video URL <span class="text-slate-400 font-normal">(Optional: YouTube, Google Drive, or .mp4)</span>
+                        Surprise Video URL <span class="text-slate-400 font-normal">(Direct .mp4, Dropbox ?raw=1, or YouTube)</span>
                     </label>
-                    <input id="input-video" type="text" placeholder="e.g., https://youtu.be/... or surprise.mp4" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
+                    <input id="input-video" type="text" placeholder="e.g., surprise.mp4" class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400">
                 </div>
 
                 <div class="pt-2">
@@ -828,11 +820,12 @@
            ========================================================================== */
         const CONFIG = {
             recipientName: "Zainab",
-            senderName: "Your Husband",
+            senderName: "Your Best Friend",
             message: "Wishing you a year as bright, bold, and extraordinary as the stars above.\n\nMay every adventure bring you joy, every challenge turn into triumph, and every wish you made tonight come true. Happy Birthday!",
-            videoUrl: "https://drive.google.com/file/d/17mzbEYTd5xyqSCtciLKI7inunQvc8h--/view?usp=drivesdk",
-            videoCaption: "Press play for a special birthday surprise made just for you! ❤️",
-            // Floating poppable wish orbs that appear during the celebration
+            // 🎬 FOR INSTANT AUTOPLAY: Upload your video as "surprise.mp4" in the same GitHub folder as index.html!
+            // (Or paste a direct .mp4 link / Dropbox link ending in ?raw=1)
+            videoUrl: "surprise.mp4",
+            videoCaption: "Made just for you! ❤️",
             wishOrbs: [
                 "✨ Endless Joy",
                 "🚀 Bold Adventures",
@@ -851,7 +844,7 @@
         };
 
         /* ==========================================================================
-1. PERSONALIZATION & URL PARAMETER PARSING
+           1. PERSONALIZATION & URL PARAMETER PARSING
            ========================================================================== */
         const urlParams = new URLSearchParams(window.location.search);
         const state = {
@@ -877,23 +870,24 @@
             document.getElementById("card-sender").textContent = state.sender;
             document.getElementById("video-caption-text").textContent = CONFIG.videoCaption;
 
-            // Pre-fill custom link modal inputs
             document.getElementById("input-name").value = state.recipient;
             document.getElementById("input-from").value = state.sender;
             document.getElementById("input-msg").value = state.message;
             document.getElementById("input-video").value = state.videoUrl;
 
-            // Apply CSS custom properties
             const root = document.documentElement;
             root.style.setProperty("--bg-deep", CONFIG.colors.bgDeep);
             root.style.setProperty("--bg-nebula-1", CONFIG.colors.bgNebula1);
             root.style.setProperty("--bg-nebula-2", CONFIG.colors.bgNebula2);
             root.style.setProperty("--accent-primary", CONFIG.colors.primaryAccent);
             root.style.setProperty("--accent-gold", CONFIG.colors.goldAccent);
+
+            // Preload video immediately so it plays with zero buffering delay when clicked
+            preloadVideoSource(state.videoUrl);
         }
 
         /* ==========================================================================
-2. STAGE NAVIGATION (ENVELOPE -> CAKE -> CELEBRATION)
+           2. STAGE NAVIGATION (ENVELOPE -> CAKE -> CELEBRATION)
            ========================================================================== */
         const stageEnvelope = document.getElementById("stage-envelope");
         const stageCake = document.getElementById("stage-cake");
@@ -908,7 +902,6 @@
             }, 350);
         }
 
-        // Stage 1: Break Wax Seal
         waxSealBtn.addEventListener("click", () => {
             envelopeEl.classList.add("opened");
             playSparkleChime();
@@ -918,7 +911,7 @@
         });
 
         /* ==========================================================================
-3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
+           3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
            ========================================================================== */
         const flames = [
             document.getElementById("flame-1"),
@@ -970,7 +963,6 @@
             if (state.candlesRemaining > 0) extinguishNextCandle();
         });
 
-        // Microphone Wind/Blow Detection via Web Audio API
         enableMicBtn.addEventListener("click", async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -994,7 +986,6 @@
                     if (!state.micAnalyser || state.candlesRemaining <= 0) return;
                     analyser.getByteFrequencyData(dataArray);
 
-                    // Low-frequency wind rumble energy (bins 0..18)
                     let lowSum = 0;
                     for (let i = 0; i < 18; i++) lowSum += dataArray[i];
                     const avgVolume = lowSum / 18;
@@ -1002,14 +993,12 @@
                     const percent = Math.min(100, Math.round((avgVolume / 165) * 100));
                     micLevelBar.style.width = `${percent}%`;
 
-                    // Tilt flames if gentle breeze detected
                     flames.forEach(f => {
                         if (!f.classList.contains("blown-out")) {
                             f.classList.toggle("wind-tilt", avgVolume > 65);
                         }
                     });
 
-                    // Extinguish one candle per strong blow pulse
                     if (avgVolume > 115 && !blowCooldown) {
                         blowCooldown = true;
                         extinguishNextCandle();
@@ -1033,7 +1022,7 @@
         }
 
         /* ==========================================================================
-4. STAGE 3 & 4: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
+           4. STAGE 3 & 4: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
            ========================================================================== */
         let fireworksActive = false;
 
@@ -1041,7 +1030,6 @@
             switchStage(stageCake, stageCelebration);
             fireworksActive = true;
 
-            // Launch Confetti & Fireworks Salvo
             triggerConfettiBurst();
             for (let i = 0; i < 5; i++) {
                 setTimeout(() => {
@@ -1052,14 +1040,10 @@
                 }, i * 350);
             }
 
-            // Start Music Box Melody
             document.getElementById("music-toggle-btn").classList.remove("hidden");
             startMusicBox();
 
-            // Typewriter Effect for Message
             typeMessage(state.message, document.getElementById("typewriter-message"));
-
-            // Spawn Poppable Floating Wish Orbs
             spawnWishOrbs();
         }
 
@@ -1071,7 +1055,6 @@
                 index++;
                 if (index >= text.length) {
                     clearInterval(interval);
-                    // Highlight the surprise gift box gently once the letter finishes typing
                     const ctaBox = document.getElementById("surprise-cta-wrapper");
                     if (ctaBox) {
                         ctaBox.classList.add("ring-2", "ring-amber-300/60", "shadow-lg");
@@ -1081,30 +1064,39 @@
         }
 
         /* ==========================================================================
-           4B. CINEMATIC VIDEO SURPRISE POPUP LOGIC (MP4, YOUTUBE, GOOGLE DRIVE, VIMEO)
+           4B. INSTANT AUTO-PLAYING INSTAGRAM REEL (9:16) VIDEO SURPRISE MODAL
            ========================================================================== */
         const videoModal = document.getElementById("video-surprise-modal");
-        const videoContainer = document.getElementById("video-player-container");
+        const nativeVideo = document.getElementById("native-reel-video");
+        const iframeWrapper = document.getElementById("iframe-reel-wrapper");
         const videoFallbackBanner = document.getElementById("video-fallback-banner");
         const openSurpriseBtn = document.getElementById("open-surprise-btn");
         const closeVideoBtn = document.getElementById("close-video-btn");
         const doneVideoBtn = document.getElementById("done-video-btn");
         const localVideoPicker = document.getElementById("local-video-picker");
 
+        let videoLoadFailed = false;
+
         function parseVideoEmbed(url) {
             if (!url) return { type: "none" };
 
+            // Auto-convert Dropbox share links to direct streaming links
+            if (/dropbox\.com/i.test(url)) {
+                const directDropbox = url.replace(/[?&]dl=0/i, "").replace(/www\.dropbox\.com/i, "dl.dropboxusercontent.com");
+                return { type: "video", src: directDropbox };
+            }
+
             // YouTube (watch, youtu.be, shorts, embed)
-            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
             if (ytMatch && ytMatch[1]) {
                 return {
                     type: "iframe",
-                    src: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`
+                    src: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&playsinline=1&rel=0`
                 };
             }
 
             // Google Drive share link -> preview embed
-            const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
             if (driveMatch && driveMatch[1]) {
                 return {
                     type: "iframe",
@@ -1113,7 +1105,7 @@
             }
 
             // Vimeo link
-            const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+            const vimeoMatch = url.match(/vimeo\.com\/(\d+)/i);
             if (vimeoMatch && vimeoMatch[1]) {
                 return {
                     type: "iframe",
@@ -1121,47 +1113,41 @@
                 };
             }
 
-            // Direct video file (.mp4, .webm, .ogg, or blob URL)
+            // Direct video file (.mp4, .webm, .mov, or blob URL)
             return {
                 type: "video",
                 src: url
             };
         }
 
-        function renderVideoSource(url) {
-            videoContainer.innerHTML = "";
-            videoFallbackBanner.classList.add("hidden");
-
+        function preloadVideoSource(url) {
+            videoLoadFailed = false;
             const parsed = parseVideoEmbed(url);
 
-            if (parsed.type === "iframe") {
-                const iframe = document.createElement("iframe");
-                iframe.src = parsed.src;
-                iframe.className = "w-full h-full border-0";
-                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
-                iframe.allowFullscreen = true;
-                videoContainer.appendChild(iframe);
-            } else if (parsed.type === "video") {
-                const video = document.createElement("video");
-                video.src = parsed.src;
-                video.controls = true;
-                video.autoplay = true;
-                video.playsInline = true;
-                video.className = "w-full h-full object-contain bg-black";
-
-                // If surprise.mp4 isn't uploaded yet on GitHub, show the friendly uploader/guide
-                video.addEventListener("error", () => {
-                    videoFallbackBanner.classList.remove("hidden");
-                });
-
-                videoContainer.appendChild(video);
+            if (parsed.type === "video") {
+                nativeVideo.classList.remove("hidden");
+                iframeWrapper.classList.add("hidden");
+                iframeWrapper.innerHTML = "";
+                nativeVideo.src = parsed.src;
+                nativeVideo.load();
+            } else if (parsed.type === "iframe") {
+                nativeVideo.classList.add("hidden");
+                nativeVideo.removeAttribute("src");
+                iframeWrapper.classList.remove("hidden");
             } else {
-                videoFallbackBanner.classList.remove("hidden");
+                videoLoadFailed = true;
             }
         }
 
+        nativeVideo.addEventListener("error", () => {
+            videoLoadFailed = true;
+            if (!videoModal.classList.contains("hidden")) {
+                videoFallbackBanner.classList.remove("hidden");
+            }
+        });
+
         function openVideoSurprise() {
-            // Pause background music box so video audio is clear
+            // Pause background music box immediately so video audio plays cleanly
             state.wasMusicPlayingBeforeVideo = state.musicPlaying;
             if (state.musicPlaying) {
                 stopMusicBox();
@@ -1170,18 +1156,53 @@
             playSparkleChime();
             triggerConfettiBurst();
 
-            renderVideoSource(state.videoUrl);
+            videoFallbackBanner.classList.add("hidden");
+            const parsed = parseVideoEmbed(state.videoUrl);
+
             videoModal.classList.remove("hidden");
             videoModal.classList.add("flex");
+
+            if (parsed.type === "video") {
+                nativeVideo.classList.remove("hidden");
+                iframeWrapper.classList.add("hidden");
+
+                if (videoLoadFailed) {
+                    videoFallbackBanner.classList.remove("hidden");
+                    return;
+                }
+
+                nativeVideo.currentTime = 0;
+                nativeVideo.muted = false;
+
+                // Trigger instant playback directly inside the user click handler
+                const playPromise = nativeVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Browser fallback: start muted if unmuted autoplay is restricted, then unmute
+                        nativeVideo.muted = true;
+                        nativeVideo.play().then(() => {
+                            nativeVideo.muted = false;
+                        }).catch(() => {});
+                    });
+                }
+            } else if (parsed.type === "iframe") {
+                nativeVideo.classList.add("hidden");
+                iframeWrapper.classList.remove("hidden");
+                iframeWrapper.innerHTML = `<iframe src="${parsed.src}" class="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+            } else {
+                videoFallbackBanner.classList.remove("hidden");
+            }
         }
 
         function closeVideoSurprise() {
             videoModal.classList.add("hidden");
             videoModal.classList.remove("flex");
-            // Stop video playback completely on close
-            videoContainer.innerHTML = "";
 
-            // Resume music box if it was playing before opening the video
+            // Pause and reset native video without losing buffered cache
+            nativeVideo.pause();
+            nativeVideo.currentTime = 0;
+            iframeWrapper.innerHTML = "";
+
             if (state.wasMusicPlayingBeforeVideo) {
                 startMusicBox();
             }
@@ -1191,7 +1212,6 @@
         closeVideoBtn.addEventListener("click", closeVideoSurprise);
         doneVideoBtn.addEventListener("click", closeVideoSurprise);
 
-        // Close modal when clicking outside the cinema frame or pressing Escape
         videoModal.addEventListener("click", (e) => {
             if (e.target === videoModal) closeVideoSurprise();
         });
@@ -1201,12 +1221,17 @@
             }
         });
 
-        // Allow instant testing with a local video file from device
         localVideoPicker.addEventListener("change", (e) => {
             const file = e.target.files && e.target.files[0];
             if (!file) return;
             const objectUrl = URL.createObjectURL(file);
-            renderVideoSource(objectUrl);
+            state.videoUrl = objectUrl;
+            videoLoadFailed = false;
+            videoFallbackBanner.classList.add("hidden");
+            nativeVideo.classList.remove("hidden");
+            iframeWrapper.classList.add("hidden");
+            nativeVideo.src = objectUrl;
+            nativeVideo.play();
         });
 
         // 3D Holographic Card Tilt Physics
@@ -1232,7 +1257,6 @@
             holoCard.style.transform = "rotateX(0deg) rotateY(0deg)";
         });
 
-        // Replay / Relight Cake Button
         document.getElementById("replay-cake-btn").addEventListener("click", () => {
             state.candlesRemaining = 3;
             candlesLeftLabel.textContent = "3 candles lit";
@@ -1254,7 +1278,7 @@
         });
 
         /* ==========================================================================
-5. POPPABLE FLOATING WISH ORBS
+           5. POPPABLE FLOATING WISH ORBS
            ========================================================================== */
         function spawnWishOrbs() {
             const container = document.getElementById("wish-orbs-layer");
@@ -1265,7 +1289,6 @@
                 orb.className = "wish-orb";
                 orb.innerHTML = `<span>✨</span><span>Wish #${i + 1}</span>`;
 
-                // Position around screen edges so center card remains clear
                 const isLeft = i % 2 === 0;
                 const xPos = isLeft ? (4 + Math.random() * 14) : (74 + Math.random() * 14);
                 const yPos = 15 + (i * 12) % 70;
@@ -1280,7 +1303,6 @@
                     playSparkleChime();
                     launchFirework(e.clientX, e.clientY);
 
-                    // Show floating wish toast
                     const toast = document.createElement("div");
                     toast.className = "wish-toast px-4 py-2 rounded-full bg-amber-400 text-slate-950 font-bold text-sm shadow-xl";
                     toast.textContent = wishText;
@@ -1299,7 +1321,7 @@
         }
 
         /* ==========================================================================
-6. WEB AUDIO API: SYNTHESIZED MUSIC BOX & CHIMES
+           6. WEB AUDIO API: SYNTHESIZED MUSIC BOX & CHIMES
            ========================================================================== */
         function playSparkleChime() {
             try {
@@ -1331,7 +1353,6 @@
                 if (!state.audioCtx) state.audioCtx = new AudioCtx();
                 if (state.audioCtx.state === "suspended") state.audioCtx.resume();
 
-                // "Happy Birthday to You" Music Box Melody (freq in Hz, duration in beats)
                 const melody = [
                     [261.63, 0.75], [261.63, 0.25], [293.66, 1], [261.63, 1], [349.23, 1], [329.63, 2],
                     [261.63, 0.75], [261.63, 0.25], [293.66, 1], [261.63, 1], [392.00, 1], [349.23, 2],
@@ -1399,7 +1420,7 @@
         }
 
         /* ==========================================================================
-7. HTML5 CANVAS: TWINKLING STARFIELD & INTERACTIVE FIREWORKS
+           7. HTML5 CANVAS: TWINKLING STARFIELD & INTERACTIVE FIREWORKS
            ========================================================================== */
         const canvas = document.getElementById("cosmos-canvas");
         const ctx = canvas.getContext("2d");
@@ -1446,7 +1467,6 @@
             }
         }
 
-        // Click anywhere on canvas to launch fireworks
         canvas.addEventListener("click", (e) => {
             launchFirework(e.clientX, e.clientY);
         });
@@ -1454,7 +1474,6 @@
         function animateCosmos() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw twinkling stars
             for (const s of stars) {
                 s.alpha += s.delta;
                 if (s.alpha <= 0.15 || s.alpha >= 1) s.delta *= -1;
@@ -1464,12 +1483,11 @@
                 ctx.fill();
             }
 
-            // Draw firework particles
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.045; // gentle gravity
+                p.vy += 0.045;
                 p.vx *= 0.985;
                 p.vy *= 0.985;
                 p.alpha -= 0.016;
@@ -1490,7 +1508,6 @@
                 ctx.restore();
             }
 
-            // Occasional ambient firework during celebration stage
             if (fireworksActive && Math.random() < 0.025) {
                 launchFirework(
                     canvas.width * (0.15 + Math.random() * 0.7),
@@ -1502,7 +1519,7 @@
         }
 
         /* ==========================================================================
-8. CUSTOM SHAREABLE LINK BUILDER MODAL
+           8. CUSTOM SHAREABLE LINK BUILDER MODAL
            ========================================================================== */
         const builderModal = document.getElementById("builder-modal");
         const openBuilderBtn = document.getElementById("open-builder-btn");
