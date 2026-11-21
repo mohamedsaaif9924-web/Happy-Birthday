@@ -518,6 +518,17 @@
             animation: modalPopIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        /* Shake animation for wrong password */
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .shake-error {
+            animation: shakeError 0.4s ease-in-out;
+        }
+
         /* Instagram Reel 9:16 Vertical Frame Sizing */
         .reel-frame {
             aspect-ratio: 9 / 16;
@@ -672,10 +683,10 @@
                 <div id="surprise-cta-wrapper" class="relative z-10 my-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-500/15 border border-amber-300/35 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-500">
                     <div class="text-center sm:text-left">
                         <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-amber-300 mb-0.5">
-                            ✨ One More Thing...
+                            🔒 Secret Surprise Locked
                         </span>
                         <p class="text-sm text-slate-200 font-medium">
-                            We recorded a special video surprise just for you!
+                            Enter the secret password to unlock your surprise video!
                         </p>
                     </div>
                     <button id="open-surprise-btn" class="btn-surprise w-full sm:w-auto px-6 py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shrink-0 cursor-pointer">
@@ -710,6 +721,44 @@
     </section>
 
     <!-- ======================================================================
+         SECRET PASSWORD PROMPT MODAL
+         ====================================================================== -->
+    <div id="password-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="password-modal-title">
+        <div id="password-card" class="modal-animate-in relative w-full max-w-sm rounded-3xl bg-slate-900/95 border border-amber-300/40 p-6 sm:p-7 shadow-[0_0_50px_rgba(251,191,36,0.22)] text-center">
+            <button id="close-password-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-rose-500/80 text-slate-200 hover:text-white flex items-center justify-center text-lg transition cursor-pointer" aria-label="Close password modal">
+                &times;
+            </button>
+
+            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-400/15 border border-amber-300/35 flex items-center justify-center text-2xl shadow-inner">
+                🔐
+            </div>
+
+            <span class="block text-[10px] font-bold uppercase tracking-widest text-amber-300 mb-1">VIP Access Required</span>
+            <h3 id="password-modal-title" class="font-display text-2xl font-bold text-white mb-1.5">
+                Enter Secret Password
+            </h3>
+            <p class="text-xs text-slate-300 mb-5">
+                Type the password to unlock your birthday surprise reel!
+            </p>
+
+            <form id="password-form" class="space-y-3">
+                <div class="relative">
+                    <input id="surprise-password-input" type="password" autocomplete="off" placeholder="Enter password..." class="w-full px-4 py-3 rounded-xl bg-slate-800/90 border border-white/20 text-center text-white font-semibold tracking-wider text-base focus:outline-none focus:border-amber-400 transition">
+                </div>
+
+                <p id="password-error-msg" class="hidden text-xs text-rose-400 font-medium">
+                    ❌ Incorrect password. Try again!
+                </p>
+
+                <button type="submit" class="btn-surprise w-full py-3.5 rounded-xl text-white font-extrabold text-sm flex items-center justify-center gap-2 cursor-pointer">
+                    <span>🔓</span>
+                    <span>Unlock Surprise</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================================================
          INSTAGRAM REEL (9:16) AUTO-PLAYING VIDEO SURPRISE POPUP MODAL
          ====================================================================== -->
     <div id="video-surprise-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-lg" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
@@ -733,9 +782,7 @@
 
             <!-- Vertical Instagram Reel 9:16 Video Player Container -->
             <div class="reel-frame relative bg-black flex items-center justify-center mx-auto overflow-hidden" id="video-player-container">
-                <!-- Persistent Native Video Element for Instant Zero-Lag Autoplay -->
                 <video id="native-reel-video" class="w-full h-full object-cover bg-black" preload="auto" playsinline controls></video>
-                <!-- Iframe Container (Used only if a YouTube / Google Drive link is supplied) -->
                 <div id="iframe-reel-wrapper" class="hidden w-full h-full"></div>
             </div>
 
@@ -822,8 +869,7 @@
             recipientName: "Zainab",
             senderName: "Your Best Friend",
             message: "Wishing you a year as bright, bold, and extraordinary as the stars above.\n\nMay every adventure bring you joy, every challenge turn into triumph, and every wish you made tonight come true. Happy Birthday!",
-            // 🎬 FOR INSTANT AUTOPLAY: Upload your video as "surprise.mp4" in the same GitHub folder as index.html!
-            // (Or paste a direct .mp4 link / Dropbox link ending in ?raw=1)
+            surprisePassword: "saaif", // 🔒 Secret password for the surprise button
             videoUrl: "surprise.mp4",
             videoCaption: "Made just for you! ❤️",
             wishOrbs: [
@@ -882,7 +928,7 @@
             root.style.setProperty("--accent-primary", CONFIG.colors.primaryAccent);
             root.style.setProperty("--accent-gold", CONFIG.colors.goldAccent);
 
-            // Preload video immediately so it plays with zero buffering delay when clicked
+            // Preload video immediately so it plays with zero buffering delay when unlocked
             preloadVideoSource(state.videoUrl);
         }
 
@@ -1064,8 +1110,15 @@
         }
 
         /* ==========================================================================
-           4B. INSTANT AUTO-PLAYING INSTAGRAM REEL (9:16) VIDEO SURPRISE MODAL
+           4B. PASSWORD GATE & INSTANT AUTO-PLAYING REEL VIDEO SURPRISE MODAL
            ========================================================================== */
+        const passwordModal = document.getElementById("password-modal");
+        const passwordCard = document.getElementById("password-card");
+        const passwordForm = document.getElementById("password-form");
+        const passwordInput = document.getElementById("surprise-password-input");
+        const passwordErrorMsg = document.getElementById("password-error-msg");
+        const closePasswordBtn = document.getElementById("close-password-btn");
+
         const videoModal = document.getElementById("video-surprise-modal");
         const nativeVideo = document.getElementById("native-reel-video");
         const iframeWrapper = document.getElementById("iframe-reel-wrapper");
@@ -1077,16 +1130,50 @@
 
         let videoLoadFailed = false;
 
+        function openPasswordPrompt() {
+            passwordErrorMsg.classList.add("hidden");
+            passwordInput.value = "";
+            passwordModal.classList.remove("hidden");
+            passwordModal.classList.add("flex");
+            setTimeout(() => passwordInput.focus(), 100);
+        }
+
+        function closePasswordPrompt() {
+            passwordModal.classList.add("hidden");
+            passwordModal.classList.remove("flex");
+        }
+
+        openSurpriseBtn.addEventListener("click", openPasswordPrompt);
+        closePasswordBtn.addEventListener("click", closePasswordPrompt);
+        passwordModal.addEventListener("click", (e) => {
+            if (e.target === passwordModal) closePasswordPrompt();
+        });
+
+        passwordForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const entered = passwordInput.value.trim().toLowerCase();
+            const expected = CONFIG.surprisePassword.trim().toLowerCase();
+
+            if (entered === expected) {
+                closePasswordPrompt();
+                openVideoSurprise();
+            } else {
+                passwordErrorMsg.classList.remove("hidden");
+                passwordCard.classList.remove("shake-error");
+                void passwordCard.offsetWidth;
+                passwordCard.classList.add("shake-error");
+                passwordInput.select();
+            }
+        });
+
         function parseVideoEmbed(url) {
             if (!url) return { type: "none" };
 
-            // Auto-convert Dropbox share links to direct streaming links
             if (/dropbox\.com/i.test(url)) {
                 const directDropbox = url.replace(/[?&]dl=0/i, "").replace(/www\.dropbox\.com/i, "dl.dropboxusercontent.com");
                 return { type: "video", src: directDropbox };
             }
 
-            // YouTube (watch, youtu.be, shorts, embed)
             const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
             if (ytMatch && ytMatch[1]) {
                 return {
@@ -1095,7 +1182,6 @@
                 };
             }
 
-            // Google Drive share link -> preview embed
             const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
             if (driveMatch && driveMatch[1]) {
                 return {
@@ -1104,7 +1190,6 @@
                 };
             }
 
-            // Vimeo link
             const vimeoMatch = url.match(/vimeo\.com\/(\d+)/i);
             if (vimeoMatch && vimeoMatch[1]) {
                 return {
@@ -1113,7 +1198,6 @@
                 };
             }
 
-            // Direct video file (.mp4, .webm, .mov, or blob URL)
             return {
                 type: "video",
                 src: url
@@ -1147,7 +1231,6 @@
         });
 
         function openVideoSurprise() {
-            // Pause background music box immediately so video audio plays cleanly
             state.wasMusicPlayingBeforeVideo = state.musicPlaying;
             if (state.musicPlaying) {
                 stopMusicBox();
@@ -1174,11 +1257,9 @@
                 nativeVideo.currentTime = 0;
                 nativeVideo.muted = false;
 
-                // Trigger instant playback directly inside the user click handler
                 const playPromise = nativeVideo.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(() => {
-                        // Browser fallback: start muted if unmuted autoplay is restricted, then unmute
                         nativeVideo.muted = true;
                         nativeVideo.play().then(() => {
                             nativeVideo.muted = false;
@@ -1198,7 +1279,6 @@
             videoModal.classList.add("hidden");
             videoModal.classList.remove("flex");
 
-            // Pause and reset native video without losing buffered cache
             nativeVideo.pause();
             nativeVideo.currentTime = 0;
             iframeWrapper.innerHTML = "";
@@ -1208,7 +1288,6 @@
             }
         }
 
-        openSurpriseBtn.addEventListener("click", openVideoSurprise);
         closeVideoBtn.addEventListener("click", closeVideoSurprise);
         doneVideoBtn.addEventListener("click", closeVideoSurprise);
 
@@ -1216,8 +1295,9 @@
             if (e.target === videoModal) closeVideoSurprise();
         });
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && !videoModal.classList.contains("hidden")) {
-                closeVideoSurprise();
+            if (e.key === "Escape") {
+                if (!passwordModal.classList.contains("hidden")) closePasswordPrompt();
+                if (!videoModal.classList.contains("hidden")) closeVideoSurprise();
             }
         });
 
