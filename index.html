@@ -584,6 +584,31 @@
             background: #000000;
             overflow: hidden;
         }
+
+        /* Romantic End Overlay on Video Completion */
+        .video-end-overlay {
+            background: radial-gradient(circle at center, rgba(76, 5, 25, 0.92), rgba(20, 5, 13, 0.97));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: endOverlayFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes endOverlayFadeIn {
+            0% { opacity: 0; transform: scale(0.96); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes heartBeatSlow {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.18); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.12); }
+        }
+
+        .animate-heartbeat {
+            display: inline-block;
+            animation: heartBeatSlow 1.8s infinite ease-in-out;
+        }
     </style>
 </head>
 <body class="lock-viewport">
@@ -845,6 +870,20 @@
 
                 <!-- Iframe Container -->
                 <div id="iframe-reel-wrapper" class="hidden w-full h-full"></div>
+
+                <!-- Romantic End Message Overlay (Shown when surprise video completes) -->
+                <div id="video-end-overlay" class="hidden video-end-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-6 text-center">
+                    <div class="text-5xl mb-4 animate-heartbeat drop-shadow-[0_0_20px_rgba(244,63,94,0.85)]">❤️</div>
+                    <p class="font-display text-2xl sm:text-3xl font-extrabold text-white leading-snug drop-shadow mb-2">
+                        I love you for Infinity ❤️
+                    </p>
+                    <p class="font-script text-2xl text-rose-300 mb-6">
+                        Forever & always yours
+                    </p>
+                    <button id="replay-video-btn" class="px-4 py-2 rounded-full bg-rose-500/25 hover:bg-rose-500/40 border border-rose-300/40 text-rose-100 text-xs font-semibold transition cursor-pointer">
+                        ↻ Watch Again
+                    </button>
+                </div>
             </div>
 
             <!-- Fallback Banner -->
@@ -998,13 +1037,11 @@
             playSparkleChime();
             envHint.textContent = "✨ Tap the card to continue to your cake ✨";
 
-            // Keep the popped-out invitation visible for 3.6 seconds so she can enjoy it
             envelopeTransitionTimer = setTimeout(() => {
                 proceedToCakeStage();
             }, 3600);
         });
 
-        // Also allow tapping the popped-out invitation card to advance anytime
         envelopeLetterCard.addEventListener("click", () => {
             if (envelopeOpened) {
                 proceedToCakeStage();
@@ -1172,7 +1209,7 @@
         }
 
         /* ==========================================================================
-           4B. UNIVERSAL VIDEO RESOLVER, iOS SAFARI UNLOCKER & PASSWORD GATE
+           4B. UNIVERSAL VIDEO RESOLVER, END MESSAGE OVERLAY & PASSWORD GATE
            ========================================================================== */
         const passwordModal = document.getElementById("password-modal");
         const passwordCard = document.getElementById("password-card");
@@ -1185,11 +1222,31 @@
         const nativeVideo = document.getElementById("native-reel-video");
         const iosUnmuteBtn = document.getElementById("ios-unmute-btn");
         const iframeWrapper = document.getElementById("iframe-reel-wrapper");
+        const videoEndOverlay = document.getElementById("video-end-overlay");
+        const replayVideoBtn = document.getElementById("replay-video-btn");
         const videoFallbackBanner = document.getElementById("video-fallback-banner");
         const openSurpriseBtn = document.getElementById("open-surprise-btn");
         const closeVideoBtn = document.getElementById("close-video-btn");
         const doneVideoBtn = document.getElementById("done-video-btn");
         const localVideoPicker = document.getElementById("local-video-picker");
+
+        // Show romantic "I love you for Infinity ❤️" overlay when surprise video finishes
+        nativeVideo.addEventListener("ended", () => {
+            videoEndOverlay.classList.remove("hidden");
+            playSparkleChime();
+            triggerConfettiBurst();
+        });
+
+        nativeVideo.addEventListener("play", () => {
+            videoEndOverlay.classList.add("hidden");
+        });
+
+        replayVideoBtn.addEventListener("click", () => {
+            videoEndOverlay.classList.add("hidden");
+            nativeVideo.currentTime = 0;
+            nativeVideo.muted = false;
+            nativeVideo.play();
+        });
 
         function parseVideoEmbed(url) {
             if (!url) return { type: "none" };
@@ -1357,6 +1414,7 @@
 
             videoFallbackBanner.classList.add("hidden");
             iosUnmuteBtn.classList.add("hidden");
+            videoEndOverlay.classList.add("hidden");
 
             const parsed = parseVideoEmbed(state.videoUrl);
 
@@ -1408,6 +1466,7 @@
             videoModal.classList.add("hidden");
             videoModal.classList.remove("flex");
             iosUnmuteBtn.classList.add("hidden");
+            videoEndOverlay.classList.add("hidden");
 
             nativeVideo.pause();
             try {
@@ -1440,6 +1499,7 @@
             state.videoUrl = objectUrl;
             state.videoLoadFailed = false;
             videoFallbackBanner.classList.add("hidden");
+            videoEndOverlay.classList.add("hidden");
             nativeVideo.classList.remove("hidden");
             iframeWrapper.classList.add("hidden");
             nativeVideo.src = objectUrl;
