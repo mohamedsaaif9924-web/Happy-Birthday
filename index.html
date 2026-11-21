@@ -20,7 +20,7 @@
 
     <style>
         /* ==========================================================================
-           ROMANTIC LOVE THEME VARIABLES & CROSS-DEVICE VIEWPORT FIXES
+           ROMANTIC LOVE THEME VARIABLES & UNIFIED VIEWPORT ARCHITECTURE
            ========================================================================== */
         :root {
             --bg-deep: #14050d;
@@ -28,8 +28,6 @@
             --bg-glow-2: #581c87;
             --accent-primary: #f43f5e;
             --accent-gold: #fbbf24;
-            --glass-bg: rgba(30, 10, 22, 0.62);
-            --glass-border: rgba(255, 255, 255, 0.16);
         }
 
         *, *::before, *::after {
@@ -37,25 +35,43 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
+        html {
+            height: 100%;
+            overflow-x: hidden;
+            scroll-behavior: auto;
+        }
+
+        body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: radial-gradient(circle at 20% 20%, var(--bg-glow-1), transparent 55%),
                         radial-gradient(circle at 80% 80%, var(--bg-glow-2), transparent 55%),
                         var(--bg-deep);
+            background-attachment: fixed;
             color: #ffffff;
             min-height: 100vh;
             min-height: 100dvh;
+            width: 100%;
             overflow-x: hidden;
             margin: 0;
-            padding: 0;
+            padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             -webkit-user-select: none;
             user-select: none;
+        }
+
+        /* Lock scroll during Envelope & Cake stages so page never jumps or scrolls down */
+        body.lock-viewport {
+            height: 100dvh;
+            overflow: hidden;
         }
 
         input, textarea {
             -webkit-user-select: text;
             user-select: text;
-            font-size: 16px !important; /* Prevents iOS Safari auto-zoom on input focus */
+            font-size: 16px !important;
         }
 
         .font-display {
@@ -77,39 +93,59 @@
         }
 
         /* ==========================================================================
-           STAGE 1: 3D WAX-SEALED LOVE LETTER ENVELOPE
+           UNIFIED STAGE CONTAINERS (ZERO LAYOUT SHIFT)
            ========================================================================== */
-        .stage-transition {
-            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                        visibility 0.8s;
+        .stage-panel {
+            width: 100%;
+            transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .stage-hidden {
-            opacity: 0;
-            transform: scale(0.92) translateY(20px);
-            visibility: hidden;
-            pointer-events: none;
-            position: absolute;
+            display: none !important;
         }
 
+        .stage-fading-out {
+            opacity: 0;
+            transform: scale(0.95) translateY(12px);
+            pointer-events: none;
+        }
+
+        .stage-entering {
+            animation: stageReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes stageReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* ==========================================================================
+           STAGE 1: 3D WAX-SEALED LOVE LETTER ENVELOPE
+           ========================================================================== */
         .envelope-wrapper {
             -webkit-perspective: 1200px;
             perspective: 1200px;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             margin: 0 auto;
         }
 
         .envelope {
             position: relative;
             width: 100%;
-            height: 250px;
+            height: 240px;
             background: linear-gradient(145deg, #4c0519, #1f0712);
             border: 1px solid rgba(251, 113, 133, 0.4);
-            border-radius: 18px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85),
-                        0 0 45px rgba(244, 63, 94, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 28px 60px -15px rgba(0, 0, 0, 0.85),
+                        0 0 45px rgba(244, 63, 94, 0.22);
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             transition: transform 0.6s ease;
@@ -125,7 +161,7 @@
             position: absolute;
             inset: 14px;
             background: linear-gradient(180deg, #fff1f2, #ffe4e6);
-            border-radius: 12px;
+            border-radius: 14px;
             color: #4c0519;
             display: flex;
             flex-direction: column;
@@ -137,13 +173,13 @@
         }
 
         .envelope.opened .envelope-letter-peek {
-            transform: translateY(-90px);
+            transform: translateY(-86px);
         }
 
         .envelope-pocket {
             position: absolute;
             inset: 0;
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
             z-index: 2;
             pointer-events: none;
@@ -233,8 +269,8 @@
            ========================================================================== */
         .cake-container {
             position: relative;
-            width: 230px;
-            height: 185px;
+            width: 220px;
+            height: 175px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -245,7 +281,7 @@
         }
 
         .plate {
-            width: 230px;
+            width: 220px;
             height: 12px;
             background: linear-gradient(90deg, #94a3b8, #f8fafc, #94a3b8);
             border-radius: 999px;
@@ -253,8 +289,8 @@
         }
 
         .tier-bottom {
-            width: 188px;
-            height: 56px;
+            width: 180px;
+            height: 54px;
             background: linear-gradient(135deg, var(--accent-primary), #9f1239);
             border-radius: 14px 14px 4px 4px;
             position: relative;
@@ -262,8 +298,8 @@
         }
 
         .tier-top {
-            width: 136px;
-            height: 48px;
+            width: 130px;
+            height: 46px;
             background: linear-gradient(135deg, #fb7185, var(--accent-primary));
             border-radius: 14px 14px 2px 2px;
             position: relative;
@@ -289,11 +325,11 @@
             height: 12px;
             background: #fff1f2;
             border-radius: 0 0 10px 10px;
-            box-shadow: 28px 3px 0 #fff1f2, 58px -1px 0 #fff1f2, 88px 4px 0 #fff1f2, 116px 0px 0 #fff1f2;
+            box-shadow: 28px 3px 0 #fff1f2, 58px -1px 0 #fff1f2, 88px 4px 0 #fff1f2, 114px 0px 0 #fff1f2;
         }
 
         .tier-top .frosting::after {
-            box-shadow: 24px 2px 0 #fff1f2, 52px -2px 0 #fff1f2, 80px 3px 0 #fff1f2;
+            box-shadow: 24px 2px 0 #fff1f2, 50px -2px 0 #fff1f2, 76px 3px 0 #fff1f2;
         }
 
         .candles-row {
@@ -305,7 +341,7 @@
 
         .candle {
             width: 11px;
-            height: 38px;
+            height: 36px;
             background: repeating-linear-gradient(
                 45deg,
                 #ffffff,
@@ -331,11 +367,11 @@
 
         .flame {
             position: absolute;
-            top: -23px;
+            top: -22px;
             left: 50%;
             transform: translateX(-50%);
             width: 14px;
-            height: 21px;
+            height: 20px;
             background: radial-gradient(ellipse at bottom, #ffffff 10%, #fde047 50%, #f97316 90%);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             box-shadow: 0 0 16px #fbbf24, 0 0 32px #f97316, 0 0 46px rgba(251, 191, 36, 0.7);
@@ -385,7 +421,7 @@
         }
 
         /* ==========================================================================
-           STAGE 3: 3D HOLOGRAPHIC TILT LOVE CARD
+           STAGE 3: UNIFIED 3D HOLOGRAPHIC LOVE CARD
            ========================================================================== */
         .holo-perspective {
             -webkit-perspective: 1400px;
@@ -394,11 +430,11 @@
 
         .holo-card {
             position: relative;
-            background: linear-gradient(135deg, rgba(60, 12, 34, 0.84), rgba(24, 9, 20, 0.9));
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
+            background: linear-gradient(145deg, rgba(58, 12, 33, 0.86), rgba(22, 8, 18, 0.92));
+            -webkit-backdrop-filter: blur(22px);
+            backdrop-filter: blur(22px);
             border: 1px solid rgba(251, 113, 133, 0.35);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+            box-shadow: 0 28px 60px -15px rgba(0, 0, 0, 0.85),
                         inset 0 1px 1px rgba(255, 255, 255, 0.22);
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
@@ -421,12 +457,12 @@
         }
 
         /* ==========================================================================
-           STAGE 4: POPPABLE FLOATING LOVE NOTES
+           POPPABLE FLOATING LOVE NOTES
            ========================================================================== */
         .wish-orb {
             position: fixed;
             z-index: 15;
-            padding: 8px 14px;
+            padding: 7px 13px;
             border-radius: 999px;
             background: radial-gradient(circle at 30% 30%, rgba(244, 63, 94, 0.45), rgba(251, 191, 36, 0.25));
             border: 1px solid rgba(253, 164, 175, 0.48);
@@ -434,7 +470,7 @@
             backdrop-filter: blur(8px);
             box-shadow: 0 0 22px rgba(244, 63, 94, 0.38);
             color: #ffe4e6;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -446,8 +482,8 @@
 
         @keyframes orbDrift {
             0% { transform: translate(0, 0); }
-            50% { transform: translate(var(--dx, 25px), var(--dy, -30px)); }
-            100% { transform: translate(calc(var(--dx, 25px) * -0.7), calc(var(--dy, -30px) * 0.8)); }
+            50% { transform: translate(var(--dx, 20px), var(--dy, -25px)); }
+            100% { transform: translate(calc(var(--dx, 20px) * -0.7), calc(var(--dy, -25px) * 0.8)); }
         }
 
         .wish-toast {
@@ -529,7 +565,7 @@
             animation: shakeError 0.4s ease-in-out;
         }
 
-        /* Cross-Browser Instagram Reel 9:16 Vertical Frame (iOS Safari + Android + Desktop) */
+        /* Cross-Browser Instagram Reel 9:16 Vertical Frame */
         .reel-modal-card {
             width: 100%;
             max-width: 370px;
@@ -547,7 +583,7 @@
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center p-4 sm:p-6 relative">
+<body class="lock-viewport">
 
     <!-- Interactive Floating Hearts & Fireworks Canvas -->
     <canvas id="romance-canvas"></canvas>
@@ -555,30 +591,24 @@
     <!-- Floating Poppable Love Notes Layer -->
     <div id="wish-orbs-layer"></div>
 
-    <!-- Top Floating Utility Bar -->
-    <header class="fixed top-4 right-4 z-30 flex items-center gap-2" style="padding-top: env(safe-area-inset-top, 0px);">
-        <button id="music-toggle-btn" class="hidden px-3.5 py-2 rounded-full bg-rose-950/80 hover:bg-rose-900 border border-rose-300/20 backdrop-blur-md text-xs font-semibold text-rose-200 flex items-center gap-1.5 transition cursor-pointer" title="Toggle Music Box">
-            <span id="music-icon">🎵</span>
-            <span id="music-label">Playing</span>
-        </button>
-        <button id="open-builder-btn" class="px-3.5 py-2 rounded-full bg-rose-950/80 hover:bg-rose-900 border border-rose-300/20 backdrop-blur-md text-xs font-semibold text-rose-100 flex items-center gap-1.5 transition cursor-pointer" title="Personalize & Share Link">
-            <span>🔗</span>
-            <span>Create Custom Link</span>
-        </button>
-    </header>
+    <!-- Minimal Floating Music Toggle (Appears only during Celebration) -->
+    <button id="music-toggle-btn" class="hidden fixed top-4 right-4 z-30 px-3.5 py-2 rounded-full bg-rose-950/80 hover:bg-rose-900 border border-rose-300/25 backdrop-blur-md text-xs font-semibold text-rose-200 flex items-center gap-1.5 shadow-lg transition cursor-pointer" style="margin-top: env(safe-area-inset-top, 0px);" title="Toggle Music">
+        <span id="music-icon">🎵</span>
+        <span id="music-label">Playing</span>
+    </button>
 
     <!-- ======================================================================
          STAGE 1: SEALED LOVE LETTER ENVELOPE
          ====================================================================== -->
-    <section id="stage-envelope" class="stage-transition relative z-10 w-full max-w-lg text-center my-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/15 border border-rose-300/30 text-rose-200 text-xs font-semibold tracking-widest uppercase mb-6">
+    <section id="stage-envelope" class="stage-panel relative z-10 max-w-md text-center mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/15 border border-rose-300/30 text-rose-200 text-xs font-semibold tracking-widest uppercase mb-5">
             <span>💌 A Love Letter For You 💌</span>
         </div>
 
         <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
-            Especially For My Love, <span id="env-recipient" class="text-rose-300">Zainab</span>
+            For My Love, <span id="env-recipient" class="text-rose-300">Zainab</span>
         </h1>
-        <p class="text-rose-100/80 text-sm mb-8">
+        <p class="text-rose-100/80 text-sm mb-7">
             Tap the heart seal to open your birthday letter.
         </p>
 
@@ -598,7 +628,7 @@
             </div>
         </div>
 
-        <p class="text-xs text-rose-200/70 mt-8 animate-pulse">
+        <p class="text-xs text-rose-200/75 mt-7 animate-pulse">
             ♥ Tap the crimson heart seal ♥
         </p>
     </section>
@@ -606,21 +636,21 @@
     <!-- ======================================================================
          STAGE 2: INTERACTIVE CAKE & REAL MICROPHONE BLOW DETECTION
          ====================================================================== -->
-    <section id="stage-cake" class="stage-transition stage-hidden relative z-10 w-full max-w-xl text-center my-auto">
-        <div class="bg-rose-950/65 backdrop-blur-xl border border-rose-300/20 rounded-3xl p-6 sm:p-10 shadow-2xl">
-            <span class="inline-block px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-200 text-xs font-semibold uppercase tracking-wider mb-4">
-                Step 1 of 2 • Make Your Birthday Wish
+    <section id="stage-cake" class="stage-panel stage-hidden relative z-10 max-w-lg text-center mx-auto">
+        <div class="bg-rose-950/70 backdrop-blur-xl border border-rose-300/25 rounded-3xl p-6 sm:p-8 shadow-2xl">
+            <span class="inline-block px-3.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-200 text-xs font-semibold uppercase tracking-wider mb-3">
+                Make Your Birthday Wish ✨
             </span>
 
-            <h2 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">
+            <h2 class="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
                 Happy Birthday, <span id="cake-recipient" class="bg-gradient-to-r from-rose-200 via-amber-200 to-rose-200 bg-clip-text text-transparent">Zainab</span>!
             </h2>
 
-            <p class="text-rose-100/85 text-sm sm:text-base max-w-md mx-auto mb-6">
-                Close your eyes, make a wish, and either <strong>blow into your microphone</strong> or tap the candles to blow them out!
+            <p class="text-rose-100/85 text-sm max-w-md mx-auto mb-5">
+                Close your eyes, make a wish, and either <strong>blow into your microphone</strong> or tap the candles!
             </p>
 
-            <div class="my-6 select-none">
+            <div class="my-4 select-none">
                 <div id="cake" class="cake-container" role="button" tabindex="0" aria-label="Tap to blow out candles">
                     <div class="candles-row">
                         <div class="candle">
@@ -642,7 +672,7 @@
                 </div>
             </div>
 
-            <div id="mic-meter-container" class="hidden max-w-xs mx-auto mb-5">
+            <div id="mic-meter-container" class="hidden max-w-xs mx-auto mb-4">
                 <div class="flex items-center justify-between text-xs text-rose-200 mb-1.5">
                     <span>🎙️ Blow into your mic!</span>
                     <span id="candles-left-label">3 candles lit</span>
@@ -652,72 +682,75 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
-                <button id="enable-mic-btn" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/40 text-rose-100 font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2.5 mt-4">
+                <button id="enable-mic-btn" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/40 text-rose-100 font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
                     <span>🎙️</span>
-                    <span>Use Mic to Blow Candles</span>
+                    <span>Use Mic to Blow</span>
                 </button>
 
-                <button id="tap-blow-btn" class="btn-romance w-full sm:w-auto px-7 py-3.5 rounded-2xl text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer">
+                <button id="tap-blow-btn" class="btn-romance w-full sm:w-auto px-6 py-3 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
                     <span>💨</span>
-                    <span>Tap to Blow Out Candles</span>
+                    <span>Tap to Blow Candles</span>
                 </button>
             </div>
-            <p id="mic-status-msg" class="text-xs text-rose-200/70 mt-3"></p>
+            <p id="mic-status-msg" class="text-xs text-rose-200/75 mt-2.5 empty:hidden"></p>
         </div>
     </section>
 
     <!-- ======================================================================
-         STAGE 3 & 4: 3D HOLOGRAPHIC LOVE CARD + INTERACTIVE FIREWORKS
+         STAGE 3: UNIFIED 3D HOLOGRAPHIC LOVE CARD & SURPRISE UNLOCK
          ====================================================================== -->
-    <section id="stage-celebration" class="stage-transition stage-hidden relative z-10 w-full max-w-2xl my-auto py-8">
+    <section id="stage-celebration" class="stage-panel stage-hidden relative z-10 max-w-xl mx-auto py-4">
         <div class="holo-perspective">
-            <div id="holo-card" class="holo-card rounded-3xl p-6 sm:p-10 text-left">
+            <div id="holo-card" class="holo-card rounded-3xl p-6 sm:p-9 text-left">
                 <div class="holo-glare" id="holo-glare"></div>
 
-                <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-rose-200/15">
+                <!-- Header -->
+                <div class="relative z-10 flex items-center justify-between gap-3 pb-4 border-b border-rose-200/15">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-rose-300">❤️ My Heart To Yours ❤️</span>
-                        <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-rose-300">❤️ My Heart To Yours ❤️</span>
+                        <h2 class="font-display text-2xl sm:text-4xl font-extrabold text-white mt-0.5">
                             Happy Birthday, <span id="card-recipient" class="text-rose-200">Zainab</span>!
                         </h2>
                     </div>
-                    <div class="text-3xl sm:text-4xl">💖</div>
+                    <div class="text-3xl sm:text-4xl shrink-0">💖</div>
                 </div>
 
-                <div class="relative z-10 my-6 min-h-[120px]">
-                    <p id="typewriter-message" class="text-rose-50 text-base sm:text-lg leading-relaxed whitespace-pre-line"></p>
+                <!-- Love Letter Body -->
+                <div class="relative z-10 my-5 min-h-[110px]">
+                    <p id="typewriter-message" class="text-rose-50 text-[15px] sm:text-lg leading-relaxed whitespace-pre-line"></p>
                 </div>
 
-                <!-- Prominent Video Surprise Reveal CTA -->
-                <div id="surprise-cta-wrapper" class="relative z-10 my-6 p-4 rounded-2xl bg-gradient-to-r from-rose-500/20 via-pink-500/15 to-amber-500/15 border border-rose-300/35 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-500">
+                <!-- Secret Video Surprise Box -->
+                <div id="surprise-cta-wrapper" class="relative z-10 my-5 p-4 rounded-2xl bg-gradient-to-r from-rose-500/20 via-pink-500/15 to-amber-500/15 border border-rose-300/35 flex flex-col sm:flex-row items-center justify-between gap-3.5 transition-all duration-500">
                     <div class="text-center sm:text-left">
                         <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-rose-300 mb-0.5">
                             🔒 Secret Surprise Locked
                         </span>
-                        <p class="text-sm text-rose-100 font-medium">
-                            Enter our secret password to unlock your birthday surprise video!
+                        <p class="text-xs sm:text-sm text-rose-100 font-medium">
+                            Enter our secret password to unlock your birthday video!
                         </p>
                     </div>
-                    <button id="open-surprise-btn" class="btn-surprise w-full sm:w-auto px-6 py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shrink-0 cursor-pointer">
-                        <span class="text-xl animate-bounce">🎁</span>
+                    <button id="open-surprise-btn" class="btn-surprise w-full sm:w-auto px-5 py-3 rounded-2xl text-white font-extrabold text-sm flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+                        <span class="text-lg animate-bounce">🎁</span>
                         <span>Click for a Surprise</span>
                     </button>
                 </div>
 
-                <div class="relative z-10 pt-5 border-t border-rose-200/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <!-- Unified Footer Signature & Actions -->
+                <div class="relative z-10 pt-4 border-t border-rose-200/15 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <p class="text-xs text-rose-200/70 uppercase tracking-wider">Forever & always yours,</p>
+                        <p class="text-[11px] text-rose-200/70 uppercase tracking-wider">Forever & always yours,</p>
                         <p id="card-sender" class="font-script text-2xl sm:text-3xl text-rose-300 mt-0.5">
                             Your Love
                         </p>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-2">
-                        <button id="launch-fireworks-btn" class="px-4 py-2.5 rounded-xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/35 text-rose-200 text-xs font-semibold transition cursor-pointer">
-                            🎆 Sparkle Fireworks
+                    <div class="flex items-center gap-2">
+                        <button id="launch-fireworks-btn" class="px-3.5 py-2 rounded-xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/35 text-rose-200 text-xs font-semibold transition cursor-pointer">
+                            🎆 Fireworks
                         </button>
-                        <button id="replay-cake-btn" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-rose-100 text-xs font-semibold transition cursor-pointer">
+                        <button id="replay-cake-btn" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-rose-100 text-xs font-semibold transition cursor-pointer">
                             🎂 Relight Cake
                         </button>
                     </div>
@@ -725,8 +758,8 @@
             </div>
         </div>
 
-        <p class="text-center text-xs text-rose-200/80 mt-5">
-            💡 <strong>Tip:</strong> Tap anywhere in the background to burst hearts & fireworks, or pop the floating love notes!
+        <p class="text-center text-xs text-rose-200/75 mt-4">
+            ✨ Tap anywhere in the background for fireworks, or pop the floating love notes!
         </p>
     </section>
 
@@ -792,7 +825,6 @@
 
             <!-- Vertical Instagram Reel 9:16 Video Player Container -->
             <div class="reel-frame flex items-center justify-center mx-auto" id="video-player-container">
-                <!-- Cross-browser video tag with playsinline + webkit-playsinline for all iPhones -->
                 <video id="native-reel-video"
                        class="w-full h-full object-cover bg-black"
                        preload="auto"
@@ -802,21 +834,21 @@
                        controlsList="nodownload">
                 </video>
 
-                <!-- iOS Safari / Low-Power Mode One-Tap Unmute Pill (shown only if browser starts video muted) -->
+                <!-- iOS Safari / Low-Power Mode One-Tap Unmute Pill -->
                 <button id="ios-unmute-btn" class="hidden absolute top-3 right-3 z-20 px-3.5 py-2 rounded-full bg-rose-600/90 text-white text-xs font-bold shadow-lg flex items-center gap-1.5 animate-bounce cursor-pointer">
                     <span>🔇</span>
                     <span>Tap for Sound</span>
                 </button>
 
-                <!-- Iframe Container (Used only if a YouTube / Vimeo link is supplied) -->
+                <!-- Iframe Container -->
                 <div id="iframe-reel-wrapper" class="hidden w-full h-full"></div>
             </div>
 
-            <!-- Fallback / Helper Banner (Shown only if video file is missing or unsupported codec) -->
+            <!-- Fallback Banner -->
             <div id="video-fallback-banner" class="hidden p-4 text-center bg-rose-950 border-t border-rose-200/15 shrink-0">
                 <p class="text-rose-200 font-semibold text-xs mb-1">📹 Video Could Not Auto-Load</p>
-                <p id="video-error-detail" class="text-rose-100/80 text-[11px] mx-auto mb-3 leading-relaxed">
-                    Ensure your video is uploaded to GitHub as <code class="px-1 py-0.5 rounded bg-black/40 text-rose-200">surprise.mp4</code> in H.264 MP4 format, or test a local file below:
+                <p class="text-rose-100/80 text-[11px] mx-auto mb-3 leading-relaxed">
+                    Ensure your video is uploaded to GitHub as <code class="px-1 py-0.5 rounded bg-black/40 text-rose-200">surprise.mp4</code> in H.264 MP4 format, or preview a local file below:
                 </p>
                 <label class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-400/20 hover:bg-rose-400/30 border border-rose-300/40 text-rose-100 text-xs font-bold cursor-pointer transition">
                     <span>📂 Preview Local Video (.mp4 / .mov)</span>
@@ -836,69 +868,17 @@
         </div>
     </div>
 
-    <!-- ======================================================================
-         CUSTOM LINK GENERATOR MODAL (SHAREABLE GITHUB PAGES URL BUILDER)
-         ====================================================================== -->
-    <div id="builder-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="bg-rose-950 border border-rose-300/25 rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl relative">
-            <button id="close-builder-btn" class="absolute top-5 right-5 text-rose-200/70 hover:text-white text-xl leading-none cursor-pointer" aria-label="Close modal">
-                &times;
-            </button>
-
-            <h3 class="font-display text-2xl font-bold text-white mb-1">Create a Custom Link 🔗</h3>
-            <p class="text-xs text-rose-200/75 mb-5">
-                Personalize this love letter and generate a ready-to-share URL—no code editing required!
-            </p>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-rose-100 mb-1">Recipient's Name</label>
-                    <input id="input-name" type="text" placeholder="e.g., Zainab" class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-rose-100 mb-1">Your Name (From)</label>
-                    <input id="input-from" type="text" placeholder="e.g., Saaif" class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-rose-100 mb-1">Birthday Love Message</label>
-                    <textarea id="input-msg" rows="3" placeholder="Write your heartfelt birthday love letter..." class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-rose-100 mb-1">
-                        Surprise Video URL <span class="text-rose-200/60 font-normal">(Direct .mp4, Dropbox ?raw=1, or YouTube)</span>
-                    </label>
-                    <input id="input-video" type="text" placeholder="e.g., surprise.mp4" class="w-full px-4 py-2.5 rounded-xl bg-black/35 border border-rose-300/20 text-white focus:outline-none focus:border-rose-400">
-                </div>
-
-                <div class="pt-2">
-                    <button id="copy-link-btn" class="btn-romance w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
-                        <span>📋</span>
-                        <span id="copy-btn-text">Generate & Copy Shareable Link</span>
-                    </button>
-                </div>
-
-                <div id="generated-url-box" class="hidden">
-                    <input id="generated-url-input" type="text" readonly class="w-full px-3 py-2 rounded-lg bg-black/50 border border-rose-400/30 text-rose-200 text-xs font-mono">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         /* ==========================================================================
-           🎨 EASY CUSTOMIZATION CONFIG (EDIT HERE FOR GITHUB PAGES!)
+           🎨 EASY CUSTOMIZATION CONFIG
            ========================================================================== */
         const CONFIG = {
             recipientName: "Zainab",
             senderName: "Your Love",
             message: "To the one who makes every single day brighter just by being in my life.\n\nMay this new year bring you endless happiness, gentle moments, and every dream your heart holds. Happy Birthday, my love—I am so grateful for you today and always!",
             surprisePassword: "saaif", // 🔒 Secret password for the surprise button
-            // Checks surprise.mp4 first, and automatically falls back to suprise.mp4 if needed
             videoCandidates: ["surprise.mp4", "suprise.mp4"],
-            videoUrl: "", // Optional: override with an external direct .mp4, Dropbox ?raw=1, or YouTube link
+            videoUrl: "",
             videoCaption: "I love you endlessly! ❤️",
             wishOrbs: [
                 "❤️ Forever Yours",
@@ -916,6 +896,14 @@
                 goldAccent: "#fbbf24"
             }
         };
+
+        /* ==========================================================================
+           0. PREVENT BROWSER AUTO-SCROLL ON LINK OPEN
+           ========================================================================== */
+        if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+        }
+        window.scrollTo(0, 0);
 
         /* ==========================================================================
            1. PERSONALIZATION & URL PARAMETER PARSING
@@ -948,11 +936,6 @@
             document.getElementById("card-sender").textContent = state.sender;
             document.getElementById("video-caption-text").textContent = CONFIG.videoCaption;
 
-            document.getElementById("input-name").value = state.recipient;
-            document.getElementById("input-from").value = state.sender;
-            document.getElementById("input-msg").value = state.message;
-            document.getElementById("input-video").value = state.videoUrl || CONFIG.videoCandidates[0];
-
             const root = document.documentElement;
             root.style.setProperty("--bg-deep", CONFIG.colors.bgDeep);
             root.style.setProperty("--bg-glow-1", CONFIG.colors.bgGlow1);
@@ -960,12 +943,11 @@
             root.style.setProperty("--accent-primary", CONFIG.colors.primaryAccent);
             root.style.setProperty("--accent-gold", CONFIG.colors.goldAccent);
 
-            // Detect and preload working video file automatically across all browsers
             resolveAndPreloadVideo();
         }
 
         /* ==========================================================================
-           2. STAGE NAVIGATION (ENVELOPE -> CAKE -> CELEBRATION)
+           2. UNIFIED STAGE NAVIGATION (ZERO SCROLL JUMP)
            ========================================================================== */
         const stageEnvelope = document.getElementById("stage-envelope");
         const stageCake = document.getElementById("stage-cake");
@@ -973,11 +955,23 @@
         const envelopeEl = document.getElementById("envelope");
         const waxSealBtn = document.getElementById("wax-seal-btn");
 
-        function switchStage(fromEl, toEl) {
-            fromEl.classList.add("stage-hidden");
+        function switchStage(fromEl, toEl, allowScroll = false) {
+            fromEl.classList.add("stage-fading-out");
             setTimeout(() => {
+                fromEl.classList.add("stage-hidden");
+                fromEl.classList.remove("stage-fading-out");
+
+                if (allowScroll) {
+                    document.body.classList.remove("lock-viewport");
+                } else {
+                    document.body.classList.add("lock-viewport");
+                }
+
+                window.scrollTo(0, 0);
                 toEl.classList.remove("stage-hidden");
-            }, 350);
+                toEl.classList.add("stage-entering");
+                setTimeout(() => toEl.classList.remove("stage-entering"), 750);
+            }, 450);
         }
 
         waxSealBtn.addEventListener("click", () => {
@@ -985,8 +979,8 @@
             envelopeEl.classList.add("opened");
             playSparkleChime();
             setTimeout(() => {
-                switchStage(stageEnvelope, stageCake);
-            }, 1150);
+                switchStage(stageEnvelope, stageCake, false);
+            }, 1100);
         });
 
         /* ==========================================================================
@@ -1047,7 +1041,7 @@
         enableMicBtn.addEventListener("click", async () => {
             unlockAudioForIOS();
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                micStatusMsg.textContent = "Microphone not supported in this browser—tap the candles or button to blow them out!";
+                micStatusMsg.textContent = "Microphone not supported—tap the candles or button to blow them out!";
                 return;
             }
             try {
@@ -1095,7 +1089,7 @@
                 }
                 detectBlow();
             } catch (err) {
-                micStatusMsg.textContent = "Microphone access unavailable—tap the candles or button to blow them out!";
+                micStatusMsg.textContent = "Microphone unavailable—tap the candles or button to blow them out!";
             }
         });
 
@@ -1108,12 +1102,12 @@
         }
 
         /* ==========================================================================
-           4. STAGE 3 & 4: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
+           4. STAGE 3: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
            ========================================================================== */
         let fireworksActive = false;
 
         function enterCelebrationStage() {
-            switchStage(stageCake, stageCelebration);
+            switchStage(stageCake, stageCelebration, true);
             fireworksActive = true;
 
             triggerConfettiBurst();
@@ -1164,7 +1158,6 @@
         const iosUnmuteBtn = document.getElementById("ios-unmute-btn");
         const iframeWrapper = document.getElementById("iframe-reel-wrapper");
         const videoFallbackBanner = document.getElementById("video-fallback-banner");
-        const videoErrorDetail = document.getElementById("video-error-detail");
         const openSurpriseBtn = document.getElementById("open-surprise-btn");
         const closeVideoBtn = document.getElementById("close-video-btn");
         const doneVideoBtn = document.getElementById("done-video-btn");
@@ -1208,7 +1201,6 @@
             };
         }
 
-        // Automatically checks surprise.mp4 -> suprise.mp4 (and handles GitHub Pages paths)
         async function resolveAndPreloadVideo() {
             state.videoLoadFailed = false;
             state.videoReady = false;
@@ -1270,8 +1262,6 @@
             nativeVideo.load();
         }
 
-        // Critical iOS Safari & iOS Chrome fix:
-        // Unlocks the <video> element inside the initial user tap so it can auto-play after password submit
         function primeVideoElementOnUserTap() {
             if (state.iosAudioUnlocked || state.videoLoadFailed) return;
             const parsed = parseVideoEmbed(state.videoUrl);
@@ -1369,8 +1359,6 @@
 
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
-                    // Fallback for iPhone Low Power Mode or strict Safari policies:
-                    // Start muted immediately (always allowed on iOS) and show one-tap sound button
                     nativeVideo.muted = true;
                     nativeVideo.play().then(() => {
                         iosUnmuteBtn.classList.remove("hidden");
@@ -1431,7 +1419,7 @@
             nativeVideo.play();
         });
 
-        // 3D Holographic Card Tilt Physics (Desktop hover + Mobile touch support)
+        // 3D Holographic Card Tilt Physics
         const holoCard = document.getElementById("holo-card");
         const holoGlare = document.getElementById("holo-glare");
 
@@ -1460,7 +1448,7 @@
             candlesLeftLabel.textContent = "3 candles lit";
             flames.forEach(f => f.classList.remove("blown-out", "wind-tilt"));
             document.getElementById("wish-orbs-layer").innerHTML = "";
-            switchStage(stageCelebration, stageCake);
+            switchStage(stageCelebration, stageCake, false);
         });
 
         document.getElementById("launch-fireworks-btn").addEventListener("click", () => {
@@ -1488,14 +1476,14 @@
                 orb.innerHTML = `<span>💖</span><span>Love Note #${i + 1}</span>`;
 
                 const isLeft = i % 2 === 0;
-                const xPos = isLeft ? (3 + Math.random() * 10) : (68 + Math.random() * 12);
+                const xPos = isLeft ? (3 + Math.random() * 8) : (68 + Math.random() * 10);
                 const yPos = 14 + (i * 12) % 68;
 
                 orb.style.left = `${xPos}%`;
                 orb.style.top = `${yPos}%`;
                 orb.style.setProperty("--drift-duration", `${12 + Math.random() * 8}s`);
-                orb.style.setProperty("--dx", `${(Math.random() - 0.5) * 30}px`);
-                orb.style.setProperty("--dy", `${(Math.random() - 0.5) * 30}px`);
+                orb.style.setProperty("--dx", `${(Math.random() - 0.5) * 26}px`);
+                orb.style.setProperty("--dy", `${(Math.random() - 0.5) * 26}px`);
 
                 orb.addEventListener("click", (e) => {
                     playSparkleChime();
@@ -1750,67 +1738,15 @@
         }
 
         /* ==========================================================================
-           8. CUSTOM SHAREABLE LINK BUILDER MODAL
-           ========================================================================== */
-        const builderModal = document.getElementById("builder-modal");
-        const openBuilderBtn = document.getElementById("open-builder-btn");
-        const closeBuilderBtn = document.getElementById("close-builder-btn");
-        const copyLinkBtn = document.getElementById("copy-link-btn");
-        const copyBtnText = document.getElementById("copy-btn-text");
-        const generatedUrlBox = document.getElementById("generated-url-box");
-        const generatedUrlInput = document.getElementById("generated-url-input");
-
-        openBuilderBtn.addEventListener("click", () => {
-            builderModal.classList.remove("hidden");
-            builderModal.classList.add("flex");
-        });
-
-        closeBuilderBtn.addEventListener("click", () => {
-            builderModal.classList.add("hidden");
-            builderModal.classList.remove("flex");
-        });
-
-        copyLinkBtn.addEventListener("click", () => {
-            const nameVal = document.getElementById("input-name").value.trim() || CONFIG.recipientName;
-            const fromVal = document.getElementById("input-from").value.trim() || CONFIG.senderName;
-            const msgVal = document.getElementById("input-msg").value.trim() || CONFIG.message;
-            const videoVal = document.getElementById("input-video").value.trim();
-
-            const baseUrl = window.location.origin + window.location.pathname;
-            const params = new URLSearchParams({
-                name: nameVal,
-                from: fromVal,
-                msg: msgVal
-            });
-            if (videoVal && !CONFIG.videoCandidates.includes(videoVal)) {
-                params.set("video", videoVal);
-            }
-            const shareUrl = `${baseUrl}?${params.toString()}`;
-
-            generatedUrlInput.value = shareUrl;
-            generatedUrlBox.classList.remove("hidden");
-            generatedUrlInput.select();
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).catch(() => document.execCommand("copy"));
-            } else {
-                document.execCommand("copy");
-            }
-
-            copyBtnText.textContent = "Copied to Clipboard! ✓";
-            setTimeout(() => {
-                copyBtnText.textContent = "Generate & Copy Shareable Link";
-            }, 2500);
-        });
-
-        /* ==========================================================================
            INITIALIZE ON LOAD
            ========================================================================== */
         window.addEventListener("resize", resizeCanvas);
-        window.onload = () => {
+        window.addEventListener("DOMContentLoaded", () => {
+            window.scrollTo(0, 0);
             applyPersonalization();
             resizeCanvas();
             animateRomanceCanvas();
-        };
+        });
     </script>
 </body>
 </html>
