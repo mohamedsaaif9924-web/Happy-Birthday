@@ -817,9 +817,8 @@
                     <input id="surprise-password-input" type="password" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Enter password..." class="w-full px-4 py-3 rounded-xl bg-black/40 border border-rose-300/25 text-center text-white font-semibold tracking-wider focus:outline-none focus:border-rose-400 transition">
                 </div>
 
-                <p id="password-error-msg" class="hidden text-xs text-rose-300 font-medium">
-                    ❌ Incorrect password. Try again, my love!
-                </p>
+                <p id="password-error-msg" class="hidden text-xs text-rose-300 font-semibold leading-relaxed"></p>
+                <p id="password-hint-msg" class="hidden text-xs text-amber-200 bg-amber-500/15 border border-amber-300/30 rounded-xl px-3 py-2 font-medium"></p>
 
                 <button type="submit" class="btn-surprise w-full py-3.5 rounded-xl text-white font-extrabold text-sm flex items-center justify-center gap-2 cursor-pointer">
                     <span>🔓</span>
@@ -919,6 +918,19 @@
             senderName: "Your Love",
             message: "To the one who makes every single day brighter just by being in my life.\n\nMay this birthday bring you endless happiness, gentle moments, and every dream your heart holds. Happy Birthday, my love—I am so grateful for you today and always!",
             surprisePassword: "saaif", // 🔒 Secret password for the surprise button
+            wrongPasswordMessages: [
+                "Think my love 🤔💭",
+                "Try harder, love! 😘",
+                "Not quite, darling 💕",
+                "Oops! You can do it, sweetheart 🥰",
+                "So close, cutiepie! ✨",
+                "Use that pretty brain, my love 😉❤️",
+                "Almost there, baby! Try again 🌹",
+                "Wrong guess, gorgeous! Keep going 💖",
+                "Don't give up now, sweetheart 💪😘",
+                "One more guess, cutiepie... you've got this! 🥰"
+            ],
+            passwordHint: "💡 Hint: It's the name of the one who loves you most — \"saaif\" ❤️",
             videoCandidates: ["surprise.mp4", "suprise.mp4"],
             videoUrl: "",
             videoCaption: "I love you endlessly! ❤️",
@@ -940,7 +952,7 @@
         };
 
         /* ==========================================================================
-           0. PREVENT BROWSER AUTO-SCROLL ON LINK OPEN
+0. PREVENT BROWSER AUTO-SCROLL ON LINK OPEN
            ========================================================================== */
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
@@ -948,7 +960,7 @@
         window.scrollTo(0, 0);
 
         /* ==========================================================================
-           1. PERSONALIZATION & URL PARAMETER PARSING
+1. PERSONALIZATION & URL PARAMETER PARSING
            ========================================================================== */
         const urlParams = new URLSearchParams(window.location.search);
         const state = {
@@ -960,6 +972,7 @@
             videoReady: false,
             videoLoadFailed: false,
             iosAudioUnlocked: false,
+            passwordAttempts: 0,
             candlesRemaining: 3,
             musicPlaying: false,
             wasMusicPlayingBeforeVideo: false,
@@ -989,7 +1002,7 @@
         }
 
         /* ==========================================================================
-           2. UNIFIED STAGE NAVIGATION (ZERO SCROLL JUMP + INVITATION PAUSE)
+2. UNIFIED STAGE NAVIGATION (ZERO SCROLL JUMP + INVITATION PAUSE)
            ========================================================================== */
         const stageEnvelope = document.getElementById("stage-envelope");
         const stageCake = document.getElementById("stage-cake");
@@ -1049,7 +1062,7 @@
         });
 
         /* ==========================================================================
-           3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
+3. STAGE 2: REAL MICROPHONE BLOW DETECTION & CANDLE LOGIC
            ========================================================================== */
         const flames = [
             document.getElementById("flame-1"),
@@ -1167,7 +1180,7 @@
         }
 
         /* ==========================================================================
-           4. STAGE 3: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
+4. STAGE 3: CELEBRATION, TYPEWRITER, 3D CARD TILT & MUSIC BOX
            ========================================================================== */
         let fireworksActive = false;
 
@@ -1216,6 +1229,7 @@
         const passwordForm = document.getElementById("password-form");
         const passwordInput = document.getElementById("surprise-password-input");
         const passwordErrorMsg = document.getElementById("password-error-msg");
+        const passwordHintMsg = document.getElementById("password-hint-msg");
         const closePasswordBtn = document.getElementById("close-password-btn");
 
         const videoModal = document.getElementById("video-surprise-modal");
@@ -1368,7 +1382,9 @@
 
         function openPasswordPrompt() {
             primeVideoElementOnUserTap();
+            state.passwordAttempts = 0;
             passwordErrorMsg.classList.add("hidden");
+            passwordHintMsg.classList.add("hidden");
             passwordInput.value = "";
             passwordModal.classList.remove("hidden");
             passwordModal.classList.add("flex");
@@ -1392,10 +1408,23 @@
             const expected = CONFIG.surprisePassword.trim().toLowerCase();
 
             if (entered === expected) {
+                state.passwordAttempts = 0;
                 closePasswordPrompt();
                 openVideoSurprise();
             } else {
+                const messages = CONFIG.wrongPasswordMessages;
+                const funnyMessage = messages[state.passwordAttempts % messages.length];
+                state.passwordAttempts++;
+
+                passwordErrorMsg.textContent = `${funnyMessage} (Attempt #${state.passwordAttempts})`;
                 passwordErrorMsg.classList.remove("hidden");
+
+                // Reveal sweet hint after the 10th failed attempt
+                if (state.passwordAttempts >= 10) {
+                    passwordHintMsg.textContent = CONFIG.passwordHint;
+                    passwordHintMsg.classList.remove("hidden");
+                }
+
                 passwordCard.classList.remove("shake-error");
                 void passwordCard.offsetWidth;
                 passwordCard.classList.add("shake-error");
@@ -1552,7 +1581,7 @@
         });
 
         /* ==========================================================================
-           5. POPPABLE FLOATING LOVE NOTES
+5. POPPABLE FLOATING LOVE NOTES
            ========================================================================== */
         function spawnWishOrbs() {
             const container = document.getElementById("wish-orbs-layer");
@@ -1595,7 +1624,7 @@
         }
 
         /* ==========================================================================
-           6. WEB AUDIO API: iOS-SAFE SYNTHESIZED MUSIC BOX & CHIMES
+6. WEB AUDIO API: iOS-SAFE SYNTHESIZED MUSIC BOX & CHIMES
            ========================================================================== */
         function unlockAudioForIOS() {
             try {
@@ -1702,7 +1731,7 @@
         }
 
         /* ==========================================================================
-           7. HTML5 CANVAS: FLOATING GLOWING HEARTS & INTERACTIVE FIREWORKS
+7. HTML5 CANVAS: FLOATING GLOWING HEARTS & INTERACTIVE FIREWORKS
            ========================================================================== */
         const canvas = document.getElementById("romance-canvas");
         const ctx = canvas.getContext("2d");
